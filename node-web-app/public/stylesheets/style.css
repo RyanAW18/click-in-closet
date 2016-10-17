@@ -1,5 +1,5 @@
 body {
-  font-family: Poiret One;
+  font-family: Damion;
   background: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8) ), url('/images/closet_background.jpg') no-repeat center center fixed;
   -webkit-background-origin:border;
   -moz-background-size: cover;
@@ -11,14 +11,14 @@ body {
 	color: white;
 }
 
-.navbar {
-	background-color:#5b6677; 
-	margin-bottom: -1px;
+.nav {
 	color: white;
+	border-bottom: 2px white;
 }
 
-a {
-  color: #00B7FF;
+.home_options {
+	font-family: Arima Madurai;
 }
 
-font-family: 'Poiret One', cursive;
+font-family: 'Damion', cursive;
+font-family: 'Arima Madurai', cursive;
