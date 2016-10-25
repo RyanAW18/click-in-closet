@@ -9,9 +9,7 @@ import requests
 
 #import defaultparser
 import crawler
-import selenium.webdriver as webdriver
-
-#import html5lib
+#import selenium.webdriver as webdriver
 
 
 

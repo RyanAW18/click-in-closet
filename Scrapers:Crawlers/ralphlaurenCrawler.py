@@ -3,20 +3,34 @@ import urllib
 import urllib2
 import requests
 
-def findUrls(soup, base_url):
-			urls = []
-			productCells = soup.findAll("a", class_= "photo")
-			for cell in productCells: 
-				if cell is not None:
-					url = cell['href']
-					print "Found product url", url
-					#urls.append(url)
-			#return urls
+base_url = "http://www.ralphlauren.com"
 
+def findUrls(base_url):
+	productUrls = []
+	remUrls = []
+	remUrls.append(base_url)
+	visitedUrls = dict()
+	for i in range(0, len(remUrls)):
+		current_url = remUrls[i]
+		html = requests.get(current_url)
+		soup = BeautifulSoup(html.text, "html.parser")
+		visitedUrls[current_url] = True	
+		typeTag = soup.find('meta', {"property" : "og:type"})
+		if typeTag['content'] is "product":
+			productUrls.append(current_url)
+		links = soup.findAll("a")
+		for link in links:
+			print link 
+			print link['href']
+			# if link['href'] is not None:
+			# 	url = link['href']
+			# 	if not visitedUrls.has_key(url):
+			# 		remUrls.append(url)
 
+	return productUrls
 
-url = "http://www.ralphlauren.com/family/index.jsp?categoryId=4332103&cp=1760782&ab=tn_women_cs_dresses"
-html = requests.get(url)
+html = requests.get(base_url)
 soup = BeautifulSoup(html.text, "html.parser")
 #print soup
-findUrls(soup, url)
+productUrls = findUrls(base_url)
+print productUrls
