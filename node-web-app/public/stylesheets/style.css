@@ -1,10 +1,5 @@
 body {
   font-family: Damion;
-  background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url('/images/closet_background.jpg') no-repeat center center fixed;
-  -webkit-background-origin:border;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
 }
 
 a {
@@ -30,6 +25,23 @@ a:hover {
 	font-family: Arima Madurai;
 }
 
+.product_body {
+	color: white;
+	background: rgba(0,0,0);
+	font-family: Damion;
+}
+
+.product_pic {
+	border-radius: 2%;
+	transition: all .3s ease-in-out;
+}
+
+.product_pic:hover {
+	-webkit-transform: scale(1.05);
+    -ms-transform: scale(1.05);
+	transform: scale(1.05);
+	transition: .3s ease;
+}
 
 #search_button {
 	border-radius:3px; 
@@ -45,6 +57,20 @@ a:hover {
 	color:#d69957;
 }
 
+#product_add_btn {
+	margin-top: 10%;
+	border-radius:3px; 
+	width:70%; 
+	background-color: #d69957; 
+	color:white;
+	transition: all .2s ease-in-out;
+}
+
+#product_add_btn:hover {
+	background-color: white; 
+	color:#d69957;
+}
+
 #search_bar {
 	font-family: Arima Madurai;
 	border-radius:3px; 
@@ -54,6 +80,16 @@ a:hover {
 	color:white;
 	box-shadow: none;
 }
+
+#site_link {
+	color: #d69957;
+	transition: all .2s ease-in-out;
+}
+
+#site_link:hover {
+	color: white;
+}
+
 
 font-family: 'Damion', cursive;
 font-family: 'Arima Madurai', cursive;
