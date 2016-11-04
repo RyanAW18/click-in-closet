@@ -27,7 +27,8 @@ a:hover {
 
 .product_body {
 	color: white;
-	background: rgba(0,0,0);
+	background-color: #000000;
+    background-image: url("https://www.transparenttextures.com/patterns/xv.png");
 	font-family: Damion;
 }
 
