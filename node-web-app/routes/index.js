@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var async = require('async');
 
 //lets require/import the mongodb native drivers.
 var mongodb = require('mongodb');
@@ -10,9 +11,10 @@ var MongoClient = mongodb.MongoClient;
 
 // Connection URL. This is where your mongodb server is running.
 var url = 'mongodb://trossi:1460@ds143707.mlab.com:43707/heroku_b37frt6h';
+
 var ex;
 
-function dbSearch(id) {
+function dbSearch(id, callback, res) {
 
 	var o_id = new ObjectID(id)
 	// Use connect method to connect to the Server
@@ -33,28 +35,33 @@ function dbSearch(id) {
 	      } else if (result.length) {
 	        	console.log('Found ' + result.length + " item(s)")
 	        	ex = result
+	        	callback(res, ex[0])
 	      } else {
 	        	console.log('No document(s) found with defined "find" criteria!');
 	        	ex = 0
+	        	callback(res, 0)
 	      }
 	    })
 
 	    //Close connection
 	    db.close();
 	  });
+
 }
 
-dbSearch("581bc7734d1c7bf095fa6926")
+function sendData(res, data) {
+	if (data == 0) {
+		res.send("error")
+	}
+	else res.send(data)
+}
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
 	res.render('home');
 });
 
-/* GET product page. */
-// router.get('/product', function(req, res, next) {
-// 	res.render('product')
-// });
 
 router.get('/product/:productID', function(req, res, next) {
 	res.render('product');
@@ -62,8 +69,7 @@ router.get('/product/:productID', function(req, res, next) {
 
 router.get('/product/:productID/data', function(req, res, next) {
 	var productID = req.params.productID
-	var dataJSON = ex[0]
-	res.send(dataJSON)
+	dbSearch(productID, sendData, res)
 });
 
 module.exports = router;

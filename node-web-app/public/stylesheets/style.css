@@ -25,11 +25,27 @@ a:hover {
 	font-family: Arima Madurai;
 }
 
+.home-option-row {
+	padding-top: 3%;
+}
+
 .product_body {
 	color: white;
 	background-color: #000000;
     background-image: url("https://www.transparenttextures.com/patterns/xv.png");
 	font-family: Damion;
+}
+
+.brand-pic {
+	transition: all .3s ease-in-out;
+	border-radius: 10%;
+}
+
+.brand-pic:hover {
+	-webkit-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+	transform: scale(1.1);
+	transition: .3s ease;
 }
 
 .product_pic {
@@ -44,6 +60,17 @@ a:hover {
 	transition: .3s ease;
 }
 
+.account-photo {
+	border-radius: 100%;
+	transition: all .15s ease-in-out;
+}
+
+.account-photo:hover {
+	-webkit-transform: scale(1.2);
+    -ms-transform: scale(1.2);
+	transform: scale(1.2);
+	transition: .15s ease;
+}
 
 #search_button {
 	border-radius:3px; 
