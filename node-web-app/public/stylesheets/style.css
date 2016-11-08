@@ -126,7 +126,7 @@ a:hover {
 	color: white;
 }
 
-.results-table {
+.results-page {
 	padding-top: 2%;
 }
 
@@ -144,6 +144,7 @@ a:hover {
 	background-color: white; 
 	color:black;
 	transition: all .2s ease-in-out;
+	vertical-align: middle;
 }
 
 .search-res-view {

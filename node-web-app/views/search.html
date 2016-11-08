@@ -38,8 +38,8 @@
 		  	<div class="results-table">
 			  	<div class="col-md-1 col-lg-1"></div>
 			  	<div class="col-md-10 col-lg-10">
-				  	<table class="table">
-				  		<tr class="search-result" onclick="location.href = ''">
+				  	<table class="table" id="results-table">
+				  		<!-- <tr class="search-result" onclick="location.href = ''">
 				  			<td style="vertical-align: middle">
 				  				<img src="http://www.forever21.com/images/default_330/00223445-02.jpg" width="100px"/>
 				  			</td>
@@ -62,7 +62,7 @@
 				  			<td style="vertical-align: middle">Product Name<td>
 				  			<td style="vertical-align: middle">$20.00</td>
 				  			<td style="vertical-align: middle" class="result-brand"><img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQT_raSOFkqr8abD51PcuBBufeaA_wAwZ_MZZQQdNBt576fp6lMdQ" width="100px"></td>
-				  		</tr>
+				  		</tr> -->
 				  	</table>
 				</div>
 			  	<div class="col-md-1 col-lg-1"></div>
@@ -71,8 +71,19 @@
 		 <script type="text/javascript" src="/javascripts/common.js"></script>
 		 <script>
 		 	var query = getQueryVariable(1)
-		 	document.getElementById("result-header").innerHTML = "Search Results: " + query
-		 	document.getElementById("page-title").innerHTML = "Search:" + query
+		 	var results = getSearchData(query)
+		 	document.getElementById("result-header").innerHTML = "Search Results: " + query + " (" + JSON.parse(results).length + " Results)"
+		 	document.getElementById("page-title").innerHTML = "Search: " + query
+		 	var table = document.getElementById("results-table")
+	 		for (var i = 0; i < results.length; i++) {
+	 			var productJSON = JSON.parse(results)[i]
+	 			row = table.insertRow(i)
+	 			row.class="search-result"
+	 			row.insertCell(0).innerHTML = productJSON["image"]
+	 			row.insertCell(1).innerHTML = productJSON["name"]
+	 			row.insertCell(2).innerHTML = productJSON["price"]
+	 			row.insertCell(3).innerHTML = productJSON["brand"]
+	 		}
 		</script>
 	</body>
 

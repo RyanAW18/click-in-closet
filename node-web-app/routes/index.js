@@ -44,7 +44,7 @@ function dbFetch(id, callback, res) {
 	    })
 
 	    //Close connection
-	    //db.close();
+	    // db.close();
 	  });
 
 }
@@ -78,7 +78,7 @@ function dbSearch(query, callback, res) {
 	    })
 
 	    //Close connection
-	    //db.close();
+	    // db.close();
 	  });
 
 }
@@ -106,9 +106,14 @@ router.get('/product/:productID/data', function(req, res, next) {
 	dbFetch(productID, sendData, res)
 });
 
-router.get('/search/test/:query', function(req, res, next) {
-	dbSearch("off the shoulder", sendData, res)
+router.get('/search/:query/data', function(req, res, next) {
+	var query = req.params.query
+	dbSearch(query, sendData, res)
 
+});
+
+router.get('/search/:query', function(req, res, next) {
+	res.render('search');
 });
 
 router.get('/search/:query', function(req, res, next) {

@@ -10,6 +10,18 @@ function getData(productID) {
     return JSON.parse(xmlhttp.responseText);
 }
 
+function getSearchData(productID) {
+    var xmlhttp = new XMLHttpRequest();
+    var url = "/search/" + query + "/data";
+    xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+      }
+    };
+    xmlhttp.open("GET", url, false);
+    xmlhttp.send();
+    return xmlhttp.responseText;
+}
+
 function getQueryVariable(index) {
   var query = window.location.href;
   var vars = query.split("/");
