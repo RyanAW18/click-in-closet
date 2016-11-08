@@ -77,13 +77,35 @@
 		 	var table = document.getElementById("results-table")
 	 		for (var i = 0; i < results.length; i++) {
 	 			var productJSON = JSON.parse(results)[i]
-	 			row = table.insertRow(i)
-	 			row.class="search-result"
-	 			row.insertCell(0).innerHTML = productJSON["image"]
-	 			row.insertCell(1).innerHTML = productJSON["name"]
-	 			row.insertCell(2).innerHTML = productJSON["price"]
-	 			row.insertCell(3).innerHTML = productJSON["brand"]
+	 			if (productJSON != null) {
+	 				row = table.insertRow(i)
+		 			row.className="search-result"
+		 			row.setAttribute("productID", productJSON["_id"]);
+    				row.onclick = (function() {
+        				location.href = "/product/" + this.getAttribute("productID");
+    				});
+		 			var x = row.insertCell(0)
+		 			var img = document.createElement('img');
+	    			img.src = productJSON["image"];
+	    			img.width = '100';
+	    			x.appendChild(img); 
+		 			cell1 = row.insertCell(1)
+		 			cell1.innerHTML = productJSON["name"]
+		 			cell1.setAttribute("style", "vertical-align: middle")
+		 			cell2 = row.insertCell(2)
+		 			cell2.innerHTML = productJSON["price"]
+		 			cell2.setAttribute("style", "vertical-align: middle")
+	 				var y = row.insertCell(3)
+	 				var imgFile = "/images/" + productJSON["brand"] + ".png"
+	 				var brandImg = document.createElement('img');
+    				brandImg.src = imgFile
+    				brandImg.width = '100';
+    				y.appendChild(brandImg);
+    				y.setAttribute("style", "vertical-align: middle")
+		 			 
+	 			}
 	 		}
+
 		</script>
 	</body>
 

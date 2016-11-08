@@ -116,8 +116,9 @@ router.get('/search/:query', function(req, res, next) {
 	res.render('search');
 });
 
-router.get('/search/:query', function(req, res, next) {
-	res.render('search');
+router.get('/search-static/:query', function(req, res, next) {
+	res.render('search-static');
+	res.render('search-static');
 });
 
 module.exports = router;
