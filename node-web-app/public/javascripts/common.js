@@ -15,3 +15,9 @@ function getQueryVariable(index) {
   var vars = query.split("/");
   return vars[vars.length - index];
 }
+
+function search() {
+    var query = document.getElementById("search_bar").value
+    console.log(query)
+    window.location.href="/search/" + query
+}

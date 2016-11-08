@@ -13,7 +13,7 @@
 				<div class="col-xs-12 col-sm-12 col-md-3">
 					<div class="navbar-header">
 						<a id="brandLink" class="navbar-brand" href="/">
-							<img alt="Brand" src="images/hanger.png" width="50px">
+							<img alt="Brand" src="/images/hanger.png" width="50px">
 						</a>
 						<a href="/"><h1 id="userBanner" style="text-align:left; font-weight: 900; font-size:18px; margin-left:5px; float: left;">Click-In Closet</h1></a>
 					</div>
@@ -22,7 +22,7 @@
 				 <form class="navbar-form" role="search" style="width:100%;">
 					<div class="form-group" style="width:100%; padding-top:6px;">
 						<input type="text" class="form-control" placeholder="Search across catalogs..." id="search_bar">
-						<button type="submit" class="btn btn-default" id="search_button">Search</button>
+						<div class="btn btn-default" id="search_button" onclick="search()">Search</div>
 					</div>
 				 </form>
 				</div>
@@ -70,10 +70,24 @@
 					</div>
 					<div class="col-sm-12 col-md-6 col-lg-6">
 						<a href=""><h3>Shop By Category</h3></a>
+						<div class="row home-option-row">
+								<button type="submit" class="btn btn-default home-button" id="men-button">Men</button>
+						</div>
+						<div class="row home-option-row">
+							<button type="submit" class="btn btn-default home-button" id="women-button">Women</button>
+						</div>
+						<div class="row home-option-row">
+							<button type="submit" class="btn btn-default home-button" id="boy-button">Boys</button>
+						</div>
+						<div class="row home-option-row">
+							<button type="submit" class="btn btn-default home-button" id="girl-button">Girls</button>
+						</div>
 					</div>
+				</div>
 				</div>
 			</div>
 			</center>
 		</div>
+		<script type="text/javascript" src="/javascripts/common.js"></script>
 	</body>
 </html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title id="page-title">Click-In Closet</title>
+		<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+		<link href="https://fonts.googleapis.com/css?family=Arima+Madurai|Damion" rel="stylesheet">
+		<link rel="icon" type="image/ico" href="/images/hanger_black.ico" />
+	</head>
+	<body class="search-body">
+		  <div class="nav container-fluid">
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-3">
+					<div class="navbar-header">
+						<a id="brandLink" class="navbar-brand" href="/">
+							<img alt="Brand" src="/images/hanger.png" width="50px">
+						</a>
+						<a href="/"><h1 id="userBanner" style="text-align:left; font-weight: 900; font-size:18px; margin-left:5px; float: left;">Click-In Closet</h1></a>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6 col-md-6" style="text-align:center;">
+				 <form class="navbar-form" role="search" style="width:100%;">
+					<div class="form-group" style="width:100%; padding-top:6px;">
+						<input type="text" class="form-control" placeholder="Search across catalogs..." id="search_bar">
+						<div class="btn btn-default" id="search_button" onclick="search()">Search</div>
+					</div>
+				 </form>
+				</div>
+				<div class="col-xs-12 col-sm-6 col-md-3">
+					<p class="navbar-text pull-right" style="font-family: Arima Madurai; color: white; font-size:16px; padding-top:6px;"><a href="">Logout</a></p>
+					<a href=""><img class="navbar-text pull-right account-photo" src="https://lh3.googleusercontent.com/-DfMN0ymwneY/V2ColVMFfII/AAAAAAAAASY/SLq2zGeSWB8BUIsxRqmRg3DH1SbT7TYFwCEw/w280-h280-p/796c7a9c-e470-4382-9c5a-666a6576517a" width = "30px"></a>
+					<p class="navbar-text pull-right" style="font-family: Arima Madurai; color: white; font-size:16px; padding-top:6px;"><a href="">Your Outfits</a></p>
+				</div>
+			</div>
+		  </div>
+		  <div class="search-res-view">
+		  	<center><h2 id="result-header">Search Results</h2><center>
+		  	<div class="results-table">
+			  	<div class="col-md-1 col-lg-1"></div>
+			  	<div class="col-md-10 col-lg-10">
+				  	<table class="table">
+				  		<tr class="search-result" onclick="location.href = ''">
+				  			<td style="vertical-align: middle">
+				  				<img src="http://www.forever21.com/images/default_330/00223445-02.jpg" width="100px"/>
+				  			</td>
+				  			<td style="vertical-align: middle">Product Name<td>
+				  			<td style="vertical-align: middle">$20.00</td>
+				  			<td style="vertical-align: middle" class="result-brand"><img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQT_raSOFkqr8abD51PcuBBufeaA_wAwZ_MZZQQdNBt576fp6lMdQ" width="100px"></td>
+				  		</tr>
+				  		<tr class="search-result" onclick="location.href = ''">
+				  			<td style="vertical-align: middle">
+				  				<img src="http://www.forever21.com/images/default_330/00198224-04.jpg" width="100px"/>
+				  			</td>
+				  			<td style="vertical-align: middle">Product Name<td>
+				  			<td style="vertical-align: middle">$20.00</td>
+				  			<td class="result-brand" style="vertical-align: middle"><img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQT_raSOFkqr8abD51PcuBBufeaA_wAwZ_MZZQQdNBt576fp6lMdQ" width="100px"></td>
+				  		</tr>
+				  		<tr class="search-result" onclick="location.href = ''">
+				  			<td style="vertical-align: middle">
+				  				<img src="http://www.forever21.com/images/default_330/00221238-03.jpg" width="100px"/>
+				  			</td>
+				  			<td style="vertical-align: middle">Product Name<td>
+				  			<td style="vertical-align: middle">$20.00</td>
+				  			<td style="vertical-align: middle" class="result-brand"><img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQT_raSOFkqr8abD51PcuBBufeaA_wAwZ_MZZQQdNBt576fp6lMdQ" width="100px"></td>
+				  		</tr>
+				  	</table>
+				</div>
+			  	<div class="col-md-1 col-lg-1"></div>
+			 </div>
+		  </div>
+		 <script type="text/javascript" src="/javascripts/common.js"></script>
+		 <script>
+		 	var query = getQueryVariable(1)
+		 	document.getElementById("result-header").innerHTML = "Search Results: " + query
+		 	document.getElementById("page-title").innerHTML = "Search:" + query
+		</script>
+	</body>
+
+</html>

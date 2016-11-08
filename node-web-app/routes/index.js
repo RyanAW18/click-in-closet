@@ -14,7 +14,7 @@ var url = 'mongodb://trossi:1460@ds143707.mlab.com:43707/heroku_b37frt6h';
 
 var ex;
 
-function dbSearch(id, callback, res) {
+function dbFetch(id, callback, res) {
 
 	var o_id = new ObjectID(id)
 	// Use connect method to connect to the Server
@@ -69,7 +69,11 @@ router.get('/product/:productID', function(req, res, next) {
 
 router.get('/product/:productID/data', function(req, res, next) {
 	var productID = req.params.productID
-	dbSearch(productID, sendData, res)
+	dbFetch(productID, sendData, res)
+});
+
+router.get('/search/:query', function(req, res, next) {
+	res.render('search');
 });
 
 module.exports = router;
