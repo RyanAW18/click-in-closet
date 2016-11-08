@@ -73,6 +73,9 @@
 		 	var query = getQueryVariable(1)
 		 	var queryString = decodeURI(query)
 		 	var results = getSearchData(query)
+		 	if (results== "error") {
+		 		document.getElementById("result-header").innerHTML = "Sorry! No results found for " + queryString
+		 	}
 		 	document.getElementById("result-header").innerHTML = "Search Results: " + queryString + " (" + JSON.parse(results).length + " Results)"
 		 	document.getElementById("page-title").innerHTML = "Search: " + queryString
 		 	var table = document.getElementById("results-table")
