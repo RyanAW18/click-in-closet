@@ -108,6 +108,11 @@ router.get('/product/:productID/data', function(req, res, next) {
 
 router.get('/search/test/:query', function(req, res, next) {
 	dbSearch("off the shoulder", sendData, res)
+
+});
+
+router.get('/search/:query', function(req, res, next) {
+	res.render('search');
 });
 
 module.exports = router;

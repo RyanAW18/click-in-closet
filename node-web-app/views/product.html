@@ -22,7 +22,7 @@
 				 <form class="navbar-form" role="search" style="width:100%;">
 					<div class="form-group" style="width:100%; padding-top:6px;">
 						<input type="text" class="form-control" placeholder="Search across catalogs..." id="search_bar">
-						<button type="submit" class="btn btn-default" id="search_button">Search</button>
+						<div class="btn btn-default" id="search_button" onclick="search()">Search</div>
 					</div>
 				 </form>
 				</div>
@@ -52,7 +52,7 @@
 			</div>
 			<div class="col-md-1 col-lg-1"></div>
 		</div>
-		 <script type="text/javascript" src="/javascripts/product.js"></script>
+		 <script type="text/javascript" src="/javascripts/common.js"></script>
 		<script type="text/javascript">
 			var productID = getQueryVariable(1)
 			var dataJSON = getData(productID)
