@@ -14,7 +14,7 @@ var url = 'mongodb://trossi:1460@ds143707.mlab.com:43707/heroku_b37frt6h';
 
 var ex;
 
-function dbSearch(id, callback, res) {
+function dbFetch(id, callback, res) {
 
 	var o_id = new ObjectID(id)
 	// Use connect method to connect to the Server
@@ -44,7 +44,41 @@ function dbSearch(id, callback, res) {
 	    })
 
 	    //Close connection
-	    db.close();
+	    //db.close();
+	  });
+
+}
+
+function dbSearch(query, callback, res) {
+
+	query = query.replace('\"', '\\\"')
+	console.log(query)
+	// Use connect method to connect to the Server
+	MongoClient.connect(url, function (err, db) {
+	  if (err) {
+	    console.log('Unable to connect to the mongoDB server. Error:', err);
+	  } else {
+	    //HURRAY!! We are connected. :)
+	    console.log('Database connection established');
+		}
+
+
+		 // do some work here with the database.
+	    var f21_dresses = db.collection('f21_dresses')
+	    var queries = f21_dresses.find( {$text: {$search: query}}).toArray(function(err, result) {
+	    	if (err) {
+	        	console.log(err);
+	      } else if (result.length) {
+	        	console.log('Found ' + result.length + " item(s)")
+	        	callback(res, result)
+	      } else {
+	        	console.log('No document(s) found with defined "find" criteria!');
+	        	callback(res, 0)
+	      }
+	    })
+
+	    //Close connection
+	    //db.close();
 	  });
 
 }
@@ -69,7 +103,11 @@ router.get('/product/:productID', function(req, res, next) {
 
 router.get('/product/:productID/data', function(req, res, next) {
 	var productID = req.params.productID
-	dbSearch(productID, sendData, res)
+	dbFetch(productID, sendData, res)
+});
+
+router.get('/search/test/:query', function(req, res, next) {
+	dbSearch("off the shoulder", sendData, res)
 });
 
 module.exports = router;
