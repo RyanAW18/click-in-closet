@@ -37,13 +37,13 @@
 	  	<div class="row">
 		  	<div class="col-md-1 col-lg-1"></div>
 		  	<div class="col-sm-12 col-md-5 col-lg-5">
-		  		<center><img id="product_pic" class="product_pic" src="" width="400px" style="margin-top:10%"></center>
+		  		<center><img id="product_pic" class="product_pic" src="http://www.forever21.com/images/1_front_750/00214348-01.jpg" width="400px" style="margin-top:10%"></center>
 
-		  		<center><a class="product_link" href=""><p id="site_link" style="margin-top:5%">View it on the BRAND website</p></a></center>
+		  		<center><a class="product_link"><p id="site_link" style="margin-top:5%">View it on the BRAND website</p></a></center>
 			</div>
 			<div class="col-sm-12 col-md-5 col-lg-5">
 		  		<h1 id="product_title"></h1>
-		  		<a class="product_link" href="" width="50%"/></a>
+		  		<a class="product_link"><img id="brand_pic" class="brand_pic" width="50%"/></a>
 		  		<h2 id="product_price"></h2>
 		  		<h3>Details</h3>
 		  			<p id="product_description"></p>
@@ -61,9 +61,14 @@
 			document.getElementById("product_pic").src = dataJSON["image"]
 			document.getElementById("product_price").innerHTML = dataJSON["price"]
 			document.getElementById("product_description").innerHTML = dataJSON["description"]
+			document.getElementById("brand_pic").src = "/images/" + dataJSON["brand"] + ".png"
 			var links = document.getElementsByClassName("product_link")
 			for (var i = 0; i < links.length; i++) {
 				links[i].href = dataJSON["url"]
 			}
+			document.getElementById("site_link").innerHTML = "View it on the " + dataJSON["brand"] + " site"
+
+
+
 		</script>
 	</body>
