@@ -99,6 +99,7 @@ while bigMenuIndex < len(bigMenu):
         j = j + 1
       if (params["category"] in noPage):
         break
+      print params["pageno"]
       params["pageno"] = params["pageno"] + 1
       js = requests.get(url, params=params).json()
       soup = BeautifulSoup(js[u'CategoryHTML'], "html.parser")
@@ -108,7 +109,6 @@ while bigMenuIndex < len(bigMenu):
   bigMenuIndex = bigMenuIndex + 1
   menuIndex = 0
 
-print i
 print j
 print "done"
 
