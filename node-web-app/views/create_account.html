@@ -14,16 +14,24 @@
 				<h1 style="font-size: 30px">Create Your Click-In Closet Account!</h1>
 				<form>
 				  <div class="form-group">
-				    <label for="formGroupExampleInput">Email Address</label>
-				    <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Enter your account email">
+				    <label for="firstName">First Name</label>
+				    <input type="text" class="form-control" id="firstName" placeholder="Enter your first name">
 				  </div>
 				  <div class="form-group">
-				    <label for="formGroupExampleInput2">Password</label>
-				    <input type="password" class="form-control" id="formGroupExampleInput2" placeholder="Enter your password">
+				    <label for="lastName">Last Name</label>
+				    <input type="text" class="form-control" id="lastName" placeholder="Enter your last name">
 				  </div>
 				  <div class="form-group">
-				    <label for="formGroupExampleInput2">Confirm Password</label>
-				    <input type="password" class="form-control" id="formGroupExampleInput2" placeholder="Please confirm password">
+				    <label for="email">Email Address</label>
+				    <input type="text" class="form-control" id="email" placeholder="Enter your email address">
+				  </div>
+				  <div class="form-group">
+				    <label for="password">Password</label>
+				    <input type="password" class="form-control" id="password" placeholder="Enter your password">
+				  </div>
+				  <div class="form-group">
+				    <label for="passwordConf">Confirm Password</label>
+				    <input type="password" class="form-control" id="passwordConf" placeholder="Please confirm password">
 				  </div>
 				</form>
 				<button style="margin-top: 2%" type="submit" class="btn btn-default button-form" onclick="createAccount()">Create Account</button>
@@ -34,8 +42,19 @@
 		<script type="text/javascript" src="/javascripts/common.js"></script>
 		<script type="text/javascript">
 		function createAccount() {
-				location.href="/home/account"
+			var firstName = document.getElementById("firstName").value
+			var lastName = document.getElementById("lastName").value
+			var email = document.getElementById("email").value
+			var password = document.getElementById("password").value
+			var passwordConf = document.getElementById("passwordConf").value
+			if (password != passwordConf) {
+				location.href="/login#"
 			}
+			else {
+				location.href="/create_account/" + email + "/" + password + "/" + firstName + "/" + lastName
+			}
+		}
+
 		</script>
 	</body>
 </html>

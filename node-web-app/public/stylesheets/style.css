@@ -165,46 +165,46 @@ a:hover {
 }
 
 #men-button {
-	background-color: #00235b;
+	background-color: rgba(0,0,0,0);
 	transition: all .2s ease-in-out;
 }
 
 #women-button {
-	background-color: #960093;
+	background-color: rgba(0,0,0,0);
 	transition: all .2s ease-in-out;
 }
 
 #boy-button {
-	background-color: #56ccff;
+	background-color: rgba(0,0,0,0);
 	transition: all .2s ease-in-out;
 }
 
 #girl-button {
-	background-color: #72f7ff;
+	background-color: rgba(0,0,0,0);
 	transition: all .2s ease-in-out;
 }
 
 #men-button:hover {
-	color: #00235b;
-	background-color: white;
+	color: white;
+	background-color: #00235b;
 	transition: all .2s ease-in-out;
 }
 
 #women-button:hover {
-	color: #960093;
-	background-color: white;
+	color: white;
+	background-color: #960093;
 	transition: all .2s ease-in-out;
 }
 
 #boy-button:hover {
-	color: #56ccff;
-	background-color: white;
+	color: white;
+	background-color: #56ccff;
 	transition: all .2s ease-in-out;
 }
 
 #girl-button:hover {
-	color: #72f7ff;
-	background-color: white;
+	color: white;
+	background-color: #ff00b6;
 	transition: all .2s ease-in-out;
 }
 
@@ -271,7 +271,7 @@ a:hover {
 	margin-top: 10%;
 	background-color: #d69957;
 	border-radius: 5%;
-	padding: 2%;
+	padding: 3%;
 }
 
 

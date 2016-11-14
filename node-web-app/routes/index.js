@@ -49,6 +49,38 @@ function dbFetch(id, callback, res) {
 
 }
 
+function createAccount(email, password, firstName, lastName, callback, res) {
+
+	// Use connect method to connect to the Server
+	MongoClient.connect(url, function (err, db) {
+	  if (err) {
+	    console.log('Unable to connect to the mongoDB server. Error:', err);
+	  } else {
+	    //HURRAY!! We are connected. :)
+	    console.log('Database connection established');
+		}
+
+
+		 // do some work here with the database.
+	    var userDB = db.collection('userDB')
+	    //CHECK IF DB CONTAINS ACCOUNT WITH THAT EMAIL BEFORE CREATING NEW ACCOUNT
+
+	    
+	    var userJSON = {"email": email, "password": password, "firstName": firstName, "lastName": lastName, outfits: {}}
+	    userDB.insert(userJSON, function(err, result) {
+	    	if (err) {
+	        	console.log(err);
+	      } else {
+	        	console.log(firstName + " added!")
+	        	callback(res, email)
+	        }
+	    })
+
+	    //Close connection
+	    // db.close();
+	  });
+}
+
 function dbSearch(query, callback, res) {
 
 	query = query.replace('\"', '\\\"')
@@ -90,9 +122,20 @@ function sendData(res, data) {
 	else res.send(data)
 }
 
+function redirectHome(res, email) {
+	if (email == 0) {
+		res.send("error") 
+	}
+	else {
+		var link = "/home/" + email
+		res.redirect(link)
+	}
+	
+}
+
 
 /* GET home page. */
-router.get('/home/account', function(req, res, next) {
+router.get('/home/:account', function(req, res, next) {
 	res.render('home');
 });
 
@@ -129,8 +172,21 @@ router.get('/login', function(req, res, next) {
 	res.render('login');
 });
 
+router.get('/login#', function(req, res, next) {
+	res.render('login');
+});
+
 router.get('/create_account', function(req, res, next) {
 	res.render('create_account');
 });
+
+router.get('/create_account/:email/:password/:firstName/:lastName', function(req, res, next) {
+	var email = req.params.email
+	var password = req.params.password
+	var firstName = req.params.firstName
+	var lastName = req.params.lastName
+	createAccount(email, password, firstName, lastName, redirectHome, res)
+});
+
 
 module.exports = router;
