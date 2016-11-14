@@ -1,5 +1,5 @@
 body {
-  font-family: Damion;
+  font-family: Arima Madurai;
 }
 
 a {
@@ -12,8 +12,16 @@ a:hover {
 	text-decoration: none;
 	transition: all .2s ease-in-out;
 }
-.home {
+
+.home_body {
 	color: white;
+	font-family: Arima Madurai;
+	background: linear-gradient( rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65) ), url('/images/closet_background.jpg');
+    min-height: 500px;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .nav {
@@ -33,14 +41,14 @@ a:hover {
 	color: white;
 	background-color: #000000;
     background-image: url("https://www.transparenttextures.com/patterns/xv.png");
-	font-family: Damion;
+	font-family: Arima Madurai;
 }
 
 .product_body {
 	color: white;
 	background-color: #000000;
     background-image: url("https://www.transparenttextures.com/patterns/xv.png");
-	font-family: Damion;
+	font-family: Arima Madurai;
 }
 
 .brand-pic {
@@ -200,5 +208,71 @@ a:hover {
 	transition: all .2s ease-in-out;
 }
 
-font-family: 'Damion', cursive;
+.landing_body {
+	color: white;
+	font-family: Arima Madurai;
+	background: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8) ), url('/images/landing_closet.jpg');
+    min-height: 500px;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.landing_header {
+	margin-top: 10%;
+}
+
+.landing_options {
+	margin-top: 5%;
+}
+
+.landing_brands {
+	margin-top: 5%;
+}
+
+#login-button {
+	color: white;
+	background-color: rgba(0,0,0,0);
+	transition: all .2s ease-in-out;
+}
+
+#login-button:hover {
+	color: white;
+	background-color: #d69957;
+	transition: all .2s ease-in-out;
+}
+
+.button-form {
+	color: white;
+	background-color: rgba(0,0,0,0);
+	transition: all .2s ease-in-out;
+}
+
+.button-form:hover {
+	color: #d69957;
+	background-color: white;
+	transition: all .2s ease-in-out;
+}
+
+#create-acc-button {
+	color: white;
+	background-color: rgba(0,0,0,0);
+	transition: all .2s ease-in-out;
+}
+
+#create-acc-button:hover {
+	color: white;
+	background-color: #d69957;
+	transition: all .2s ease-in-out;
+}
+
+.login_form {
+	margin-top: 10%;
+	background-color: #d69957;
+	border-radius: 5%;
+	padding: 2%;
+}
+
+
 font-family: 'Arima Madurai', cursive;

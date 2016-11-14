@@ -92,7 +92,7 @@ function sendData(res, data) {
 
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/home/account', function(req, res, next) {
 	res.render('home');
 });
 
@@ -119,6 +119,18 @@ router.get('/search/:query', function(req, res, next) {
 router.get('/search-static/:query', function(req, res, next) {
 	res.render('search-static');
 	res.render('search-static');
+});
+
+router.get('/', function(req, res, next) {
+	res.render('landing');
+});
+
+router.get('/login', function(req, res, next) {
+	res.render('login');
+});
+
+router.get('/create_account', function(req, res, next) {
+	res.render('create_account');
 });
 
 module.exports = router;
