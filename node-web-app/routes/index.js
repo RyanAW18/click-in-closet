@@ -12,9 +12,7 @@ var MongoClient = mongodb.MongoClient;
 // Connection URL. This is where your mongodb server is running.
 var url = 'mongodb://trossi:1460@ds143707.mlab.com:43707/heroku_b37frt6h';
 
-var ex;
-
-function dbFetch(id, callback, res) {
+function productFetch(id, callback, res) {
 
 	var o_id = new ObjectID(id)
 	// Use connect method to connect to the Server
@@ -34,11 +32,9 @@ function dbFetch(id, callback, res) {
 	        	console.log(err);
 	      } else if (result.length) {
 	        	console.log('Found ' + result.length + " item(s)")
-	        	ex = result
-	        	callback(res, ex[0])
+	        	callback(res, result[0])
 	      } else {
 	        	console.log('No document(s) found with defined "find" criteria!');
-	        	ex = 0
 	        	callback(res, 0)
 	      }
 	    })
@@ -49,7 +45,39 @@ function dbFetch(id, callback, res) {
 
 }
 
-function createAccount(email, password, firstName, lastName, callback, res) {
+function userFetch(account, callback, res) {
+
+	// Use connect method to connect to the Server
+	MongoClient.connect(url, function (err, db) {
+	  if (err) {
+	    console.log('Unable to connect to the mongoDB server. Error:', err);
+	  } else {
+	    //HURRAY!! We are connected. :)
+	    console.log('Database connection established');
+		}
+
+
+		 // do some work here with the database.
+	    var userDB = db.collection('userDB')
+	    userDB.find({'email' : account}).toArray(function(err, result) {
+	    	if (err) {
+	        	console.log(err);
+	      } else if (result.length) {
+	        	console.log("Found account" + account)
+	        	callback(res, result[0])
+	      } else {
+	        	console.log('No document(s) found with defined "find" criteria!');
+	        	callback(res, 0)
+	      }
+	    })
+
+	    //Close connection
+	    // db.close();
+	  });
+
+}
+
+function createAccount(email, password, firstName, lastName, callbackSucc, callbackFail, res) {
 
 	// Use connect method to connect to the Server
 	MongoClient.connect(url, function (err, db) {
@@ -64,17 +92,23 @@ function createAccount(email, password, firstName, lastName, callback, res) {
 		 // do some work here with the database.
 	    var userDB = db.collection('userDB')
 	    //CHECK IF DB CONTAINS ACCOUNT WITH THAT EMAIL BEFORE CREATING NEW ACCOUNT
-
-	    
-	    var userJSON = {"email": email, "password": password, "firstName": firstName, "lastName": lastName, outfits: {}}
-	    userDB.insert(userJSON, function(err, result) {
+	    userDB.find({'email' : email}).toArray(function(err, result) {
 	    	if (err) {
 	        	console.log(err);
+	      } else if (result.length) {
+	        	callbackFail(res)
 	      } else {
-	        	console.log(firstName + " added!")
-	        	callback(res, email)
-	        }
-	    })
+	      	    var userJSON = {"email": email, "password": password, "firstName": firstName, "lastName": lastName, outfits: {}}
+	        	userDB.insert(userJSON, function(err, result) {
+	    			if (err) {
+	        			console.log(err);
+	      				} else {
+	        				console.log(firstName + " added!")
+	        				callbackSucc(res, email)
+	       				}
+	    			})
+	     		}
+	    	})
 
 	    //Close connection
 	    // db.close();
@@ -115,6 +149,40 @@ function dbSearch(query, callback, res) {
 
 }
 
+function loginAccount(email, password, callbackSucc, callbackFail, res) {
+
+	// Use connect method to connect to the Server
+	MongoClient.connect(url, function (err, db) {
+	  if (err) {
+	    console.log('Unable to connect to the mongoDB server. Error:', err);
+	  } else {
+	    //HURRAY!! We are connected. :)
+	    console.log('Database connection established');
+		}
+
+
+		 // do some work here with the database.
+	    var userDB = db.collection('userDB')
+	    userDB.find({'email' : email}).toArray(function(err, result) {
+	    	if (err) {
+	        	console.log(err);
+	      } else if (result.length) {
+	      		if (password != result[0]["password"]) {
+	      			callbackFail(res)
+	      		}
+	      		else callbackSucc(res, email)
+	        	
+	      } else {
+	        	callbackFail(res)
+	     		}
+	    	})
+
+	    //Close connection
+	    // db.close();
+	  });
+
+}
+
 function sendData(res, data) {
 	if (data == 0) {
 		res.send("error")
@@ -127,16 +195,33 @@ function redirectHome(res, email) {
 		res.send("error") 
 	}
 	else {
-		var link = "/home/" + email
-		res.redirect(link)
+		var cookie = "user_email=" + email + ";"
+		res.cookie(cookie);
+		res.redirect("/home")
 	}
-	
+}
+
+function redirectEmailCollision(res) {
+	var link = "/create_account%"
+	res.redirect(link)
+}
+
+function redirectWrongPassword(res) {
+	var link = "/login#"
+	res.redirect(link)
 }
 
 
+
+
 /* GET home page. */
-router.get('/home/:account', function(req, res, next) {
+router.get('/home', function(req, res, next) {
 	res.render('home');
+});
+
+router.get('/:email/data', function(req, res, next) {
+	var email = req.params.email
+	userFetch(email, sendData, res)
 });
 
 
@@ -146,7 +231,7 @@ router.get('/product/:productID', function(req, res, next) {
 
 router.get('/product/:productID/data', function(req, res, next) {
 	var productID = req.params.productID
-	dbFetch(productID, sendData, res)
+	productFetch(productID, sendData, res)
 });
 
 router.get('/search/:query/data', function(req, res, next) {
@@ -159,10 +244,6 @@ router.get('/search/:query', function(req, res, next) {
 	res.render('search');
 });
 
-router.get('/search-static/:query', function(req, res, next) {
-	res.render('search-static');
-	res.render('search-static');
-});
 
 router.get('/', function(req, res, next) {
 	res.render('landing');
@@ -176,7 +257,30 @@ router.get('/login#', function(req, res, next) {
 	res.render('login');
 });
 
+router.get('/login%', function(req, res, next) {
+	res.render('login');
+});
+
+
+router.get('/login/:email/:password', function(req, res, next) {
+	var email = req.params.email
+	var password = req.params.password
+	loginAccount(email, password, redirectHome, redirectWrongPassword, res)
+});
+
 router.get('/create_account', function(req, res, next) {
+	res.render('create_account');
+});
+
+router.get('/create_account#', function(req, res, next) {
+	res.render('create_account');
+});
+
+router.get('/create_account%', function(req, res, next) {
+	res.render('create_account');
+});
+
+router.get('/create_account&', function(req, res, next) {
 	res.render('create_account');
 });
 
@@ -185,7 +289,7 @@ router.get('/create_account/:email/:password/:firstName/:lastName', function(req
 	var password = req.params.password
 	var firstName = req.params.firstName
 	var lastName = req.params.lastName
-	createAccount(email, password, firstName, lastName, redirectHome, res)
+	createAccount(email, password, firstName, lastName, redirectHome, redirectEmailCollision, res)
 });
 
 

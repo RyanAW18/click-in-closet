@@ -12,10 +12,10 @@
 			<div class="row">
 				<div class="col-xs-12 col-sm-12 col-md-3">
 					<div class="navbar-header">
-						<a id="brandLink" class="navbar-brand" href="/home/account">
+						<a id="userLink" class="navbar-brand" href="/home/account">
 							<img alt="Brand" src="/images/hanger.png" width="50px">
 						</a>
-						<a href="/home/account"><h1 id="userBanner" style="text-align:left; font-weight: 900; font-size:18px; margin-left:5px; float: left;">Click-In Closet</h1></a>
+						<a href="/home/account"><h1 id="userLink" style="text-align:left; font-weight: 900; font-size:18px; margin-left:5px; float: left;">Click-In Closet</h1></a>
 					</div>
 				</div>
 				<div class="col-xs-12 col-sm-6 col-md-6" style="text-align:center;">
@@ -55,7 +55,7 @@
 		 <script type="text/javascript" src="/javascripts/common.js"></script>
 		<script type="text/javascript">
 			var productID = getQueryVariable(1)
-			var dataJSON = getData(productID)
+			var dataJSON = getProductData(productID)
 			document.getElementById("page-title").innerHTML = dataJSON["brand"] + " - " + dataJSON["name"]
 			document.getElementById("product_title").innerHTML = dataJSON["name"]
 			document.getElementById("product_pic").src = dataJSON["image"]
@@ -66,7 +66,6 @@
 			for (var i = 0; i < links.length; i++) {
 				links[i].href = dataJSON["url"]
 			}
-			document.getElementById("site_link").innerHTML = "View it on the " + dataJSON["brand"] + " site"
 
 
 

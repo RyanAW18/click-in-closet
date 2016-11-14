@@ -8,18 +8,26 @@
 		<link rel="icon" type="image/ico" href="/images/hanger_black.ico" />
 	</head>
 	<body class="landing_body">
+		<a href="/"><img style="margin: 1%" src="/images/hanger.png" width="50px"/></a>
+		<div class="row error_div">
+			<div class="col-md-3"></div>
+			<div class="col-md-6">
+				<p id="errorMessage" style="display:none"></p>
+			</div>
+			<div class="col-md-3"></div>
+		</div>
 		<div class="row">
 			<div class="col-md-3"></div>
 			<div class="login_form col-md-6">
 				<h1 style="font-size: 30px">Log Into Your Account</h1>
 				<form>
 				  <div class="form-group">
-				    <label for="formGroupExampleInput">Email Address</label>
-				    <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Enter your account email">
+				    <label for="email">Email Address</label>
+				    <input type="text" class="form-control" id="email" placeholder="Enter your account email">
 				  </div>
 				  <div class="form-group">
-				    <label for="formGroupExampleInput2">Password</label>
-				    <input type="password" class="form-control" id="formGroupExampleInput2" placeholder="Enter your password">
+				    <label for="password">Password</label>
+				    <input type="password" class="form-control" id="password" placeholder="Enter your password">
 				  </div>
 				</form>
 				<button type="submit" class="btn btn-default button-form" onclick="login()">Login</button>
@@ -30,8 +38,26 @@
 		<script type="text/javascript" src="/javascripts/common.js"></script>
 		<script type="text/javascript">
 
+			var urlVar = getQueryVariable(1)
+			console.log(urlVar)
+			document.getElementById("errorMessage").style.display = "inline";
+			if (urlVar == "login%") {
+				document.getElementById("errorMessage").innerHTML = "Input field(s) incomplete";
+			}
+			else if (urlVar == "login#") {
+				document.getElementById("errorMessage").innerHTML = "Incorrect username or password";
+			}
+
 			function login() {
-				location.href="/home/account"
+				var email = document.getElementById("email").value
+				var password = document.getElementById("password").value
+				if (email.length == 0 || password.length == 0) {
+					location.href="/login%"
+				}
+				else {
+					location.href = "/login/" + email + "/" + password
+				}
+				
 			}
 		</script>
 	</body>

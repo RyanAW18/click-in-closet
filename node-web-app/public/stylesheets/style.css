@@ -268,10 +268,14 @@ a:hover {
 }
 
 .login_form {
-	margin-top: 10%;
+	margin-top: 2%;
 	background-color: #d69957;
 	border-radius: 5%;
 	padding: 3%;
+}
+
+.error_div {
+	padding-top: 8%;
 }
 
 

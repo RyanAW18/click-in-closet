@@ -8,6 +8,14 @@
 		<link rel="icon" type="image/ico" href="/images/hanger_black.ico" />
 	</head>
 	<body class="landing_body">
+		<a href="/"><img style="margin: 1%" src="/images/hanger.png" width="50px"/></a>
+		<div class="row error_div">
+			<div class="col-md-3"></div>
+			<div class="col-md-6">
+				<p id="errorMessage" style="display:none"></p>
+			</div>
+			<div class="col-md-3"></div>
+		</div>
 		<div class="row">
 			<div class="col-md-3"></div>
 			<div class="login_form col-md-6">
@@ -48,12 +56,29 @@
 			var password = document.getElementById("password").value
 			var passwordConf = document.getElementById("passwordConf").value
 			if (password != passwordConf) {
-				location.href="/login#"
+				location.href="/create_account#"
 			}
+			else if (firstName.length == 0 || lastName.length == 0 || email.length == 0 || password.length == 0 || passwordConf.length == 0) {
+				location.href="/create_account&"
+			}
+
 			else {
 				location.href="/create_account/" + email + "/" + password + "/" + firstName + "/" + lastName
 			}
 		}
+
+		var urlVar = getQueryVariable(1)
+			console.log(urlVar)
+			document.getElementById("errorMessage").style.display = "inline";
+			if (urlVar == "create_account%") {
+				document.getElementById("errorMessage").innerHTML = "Account already exists with that email";
+			}
+			else if (urlVar == "create_account#") {
+				document.getElementById("errorMessage").innerHTML = "Passwords do not match";
+			}
+			else if (urlVar == "create_account&") {
+				document.getElementById("errorMessage").innerHTML = "Input field(s) incomplete";
+			}
 
 		</script>
 	</body>
