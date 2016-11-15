@@ -258,22 +258,22 @@ router.get('/product/:productID/data', function(req, res, next) {
 });
 
 router.get('/search/:query/data', function(req, res, next) {
-	// var loggedIn = checkLoginStatus(req);
-	// if (loggedIn) {
+	var loggedIn = checkLoginStatus(req);
+	if (loggedIn) {
 		var query = req.params.query
 		dbSearch(query, sendData, res)
-	// }
-	// else res.redirect("/");
+	}
+	else res.redirect("/");
 	
 
 });
 
 router.get('/search/:query', function(req, res, next) {
-	// var loggedIn = checkLoginStatus(req);
-	// if (loggedIn) {
+	var loggedIn = checkLoginStatus(req);
+	if (loggedIn) {
 		res.render('search');
-	// }
-	// else res.redirect("/");
+	}
+	else res.redirect("/");
 	
 });
 
@@ -282,6 +282,11 @@ router.get('/', function(req, res, next) {
 	var loggedIn = checkLoginStatus(req);
 	if (loggedIn) res.redirect('/home');
 	else res.render('landing');
+});
+
+router.get('/!', function(req, res, next) {
+	res.cookie("user_email=; expires=Thu, 01 Jan 1970 00:00:00 UTC")
+	res.redirect("/")
 });
 
 router.get('/login', function(req, res, next) {
