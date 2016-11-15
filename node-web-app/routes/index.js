@@ -198,7 +198,7 @@ function sendData(res, data) {
 }
 
 function redirectHome(res, email) {
-	if (email == 0) {
+	if (email.length == 0) {
 		res.send("error") 
 	}
 	else {
@@ -258,22 +258,22 @@ router.get('/product/:productID/data', function(req, res, next) {
 });
 
 router.get('/search/:query/data', function(req, res, next) {
-	var loggedIn = checkLoginStatus(req);
-	if (loggedIn) {
+	// var loggedIn = checkLoginStatus(req);
+	// if (loggedIn) {
 		var query = req.params.query
 		dbSearch(query, sendData, res)
-	}
-	else res.redirect("/");
+	// }
+	// else res.redirect("/");
 	
 
 });
 
 router.get('/search/:query', function(req, res, next) {
-	var loggedIn = checkLoginStatus(req);
-	if (loggedIn) {
+	// var loggedIn = checkLoginStatus(req);
+	// if (loggedIn) {
 		res.render('search');
-	}
-	else res.redirect("/");
+	// }
+	// else res.redirect("/");
 	
 });
 
@@ -281,7 +281,7 @@ router.get('/search/:query', function(req, res, next) {
 router.get('/', function(req, res, next) {
 	var loggedIn = checkLoginStatus(req);
 	if (loggedIn) res.redirect('/home');
-	res.render('landing');
+	else res.render('landing');
 });
 
 router.get('/login', function(req, res, next) {
