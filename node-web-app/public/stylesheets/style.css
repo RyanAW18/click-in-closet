@@ -75,16 +75,20 @@ a:hover {
 	transition: .3s ease;
 }
 
-.account-photo {
+.account-icon {
+	font-size: 17px;
+	color: white;
 	border-radius: 100%;
 	transition: all .15s ease-in-out;
+	border: 1px solid white;
+	background-color: black;
+	width: 25px;
+	height: 25px;
 }
 
-.account-photo:hover {
-	-webkit-transform: scale(1.2);
-    -ms-transform: scale(1.2);
+.account-icon:hover {
 	transform: scale(1.2);
-	transition: .15s ease;
+	transition: .15s ease-in-out;
 }
 
 #search_button {

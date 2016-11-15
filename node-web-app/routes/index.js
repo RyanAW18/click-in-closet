@@ -98,7 +98,7 @@ function createAccount(email, password, firstName, lastName, callbackSucc, callb
 	      } else if (result.length) {
 	        	callbackFail(res)
 	      } else {
-	      	    var userJSON = {"email": email, "password": password, "firstName": firstName, "lastName": lastName, outfits: {}}
+	      	    var userJSON = {"email": email, "password": password, "firstName": firstName, "lastName": lastName, "outfits": []}
 	        	userDB.insert(userJSON, function(err, result) {
 	    			if (err) {
 	        			console.log(err);
@@ -183,6 +183,13 @@ function loginAccount(email, password, callbackSucc, callbackFail, res) {
 
 }
 
+function checkLoginStatus(req) {
+	var cookie = req.cookies;
+	if (cookie["user_email"] == undefined) return false
+	if (cookie["user_email"].length == 0) return false
+	else return true
+}
+
 function sendData(res, data) {
 	if (data == 0) {
 		res.send("error")
@@ -216,36 +223,64 @@ function redirectWrongPassword(res) {
 
 /* GET home page. */
 router.get('/home', function(req, res, next) {
-	res.render('home');
+	var loggedIn = checkLoginStatus(req);
+	if (loggedIn) res.render('home');
+	else res.redirect("/");
 });
 
 router.get('/:email/data', function(req, res, next) {
-	var email = req.params.email
-	userFetch(email, sendData, res)
+	var loggedIn = checkLoginStatus(req);
+	if (loggedIn) {
+		var email = req.params.email
+		userFetch(email, sendData, res)
+	}
+	else res.redirect("/");
+	
 });
 
 
 router.get('/product/:productID', function(req, res, next) {
-	res.render('product');
+	var loggedIn = checkLoginStatus(req);
+	if (loggedIn) {
+		res.render('product');
+	}
+	else res.redirect("/");
 });
 
 router.get('/product/:productID/data', function(req, res, next) {
-	var productID = req.params.productID
-	productFetch(productID, sendData, res)
+	var loggedIn = checkLoginStatus(req);
+	if (loggedIn) {
+		var productID = req.params.productID
+		productFetch(productID, sendData, res)
+	}
+	else res.redirect("/");
+	
 });
 
 router.get('/search/:query/data', function(req, res, next) {
-	var query = req.params.query
-	dbSearch(query, sendData, res)
+	var loggedIn = checkLoginStatus(req);
+	if (loggedIn) {
+		var query = req.params.query
+		dbSearch(query, sendData, res)
+	}
+	else res.redirect("/");
+	
 
 });
 
 router.get('/search/:query', function(req, res, next) {
-	res.render('search');
+	var loggedIn = checkLoginStatus(req);
+	if (loggedIn) {
+		res.render('search');
+	}
+	else res.redirect("/");
+	
 });
 
 
 router.get('/', function(req, res, next) {
+	var loggedIn = checkLoginStatus(req);
+	if (loggedIn) res.redirect('/home');
 	res.render('landing');
 });
 
