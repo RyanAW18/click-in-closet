@@ -7,8 +7,8 @@ import json
 from pymongo import MongoClient
 client = MongoClient('mongodb://trossi:1460@ds143707.mlab.com:43707/heroku_b37frt6h')
 db = client.heroku_b37frt6h
-f21 = db.f21
-f21.create_index([("name", "text"), ("brand", "text")])
+products = db.products
+products.create_index([("name", "text"), ("brand", "text")])
 
 def findBrand(soup):
 	return "Forever21"
@@ -48,7 +48,7 @@ def postProduct(url):
 	html = urllib.urlopen(url).read()
 	soup = BeautifulSoup(html, "html.parser")
 	product = {'brand': findBrand(soup), 'name': findProductName(soup), 'price': findPrice(soup), 'image': findImageLink(soup), 'description': findDescription(soup), 'url': url}
-	f21.insert(product)
+	products.insert(product)
 
 
 bigMenu = [u'f21', u'21men', u'plus', u'girls', u'boys']
