@@ -26,8 +26,8 @@ function productFetch(id, callback, res) {
 
 
 		 // do some work here with the database.
-	    var f21 = db.collection('f21')
-	    f21.find({'_id' : o_id}).toArray(function(err, result) {
+	    var products = db.collection('products')
+	    products.find({'_id' : o_id}).toArray(function(err, result) {
 	    	if (err) {
 	        	console.log(err);
 	      } else if (result.length) {
@@ -130,8 +130,8 @@ function dbSearch(query, callback, res) {
 
 
 		 // do some work here with the database.
-	    var f21 = db.collection('f21')
-	    var queries = f21.find( {$text: {$search: query}}).toArray(function(err, result) {
+	    var products = db.collection('products')
+	    var queries = products.find( {$text: {$search: query}}).toArray(function(err, result) {
 	    	if (err) {
 	        	console.log(err);
 	      } else if (result.length) {

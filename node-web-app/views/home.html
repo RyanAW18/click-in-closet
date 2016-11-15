@@ -95,7 +95,7 @@
 			var email = getCookie("user_email");
 			console.log(document.cookie)
 			var userJSON = getUserData(email)
-			document.getElementById("hello_banner").innerHTML = "Hi, " + userJSON["firstName"]
+			document.getElementById("hello_banner").innerHTML = "Hi, " + userJSON["firstName"] + "!"
 			document.getElementById("user-initial").innerHTML = userJSON["firstName"].charAt(0)
 
 		</script>
