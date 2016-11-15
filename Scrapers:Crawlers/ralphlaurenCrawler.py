@@ -16,12 +16,12 @@ base_url = "http://www.ralphlauren.com"
 def findBrand(soup):
   return "Ralph Lauren"
 
-def findProductName(soup):
+def findPrice(soup):
   price = soup.find('span', {"itemprop" : "price"})
   if price is not None:
     return price.text
 
-def findPrice(soup):
+def findProductName(soup):
   product = soup.find('h1', class_='prod-title')
   if product is not None:
     return product.text
