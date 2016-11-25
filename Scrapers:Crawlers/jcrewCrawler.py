@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+from selenium import webdriver
 import urllib
 import urllib2
 import requests
@@ -13,15 +14,15 @@ products.create_index([("name", "text"), ("brand", "text")])
 base_url = "http://www.jcrew.com"
 
 urlTest = "https://www.jcrew.com/p/mens_category/shirts/secretwash/secret-wash-shirt-in-redandgreen-tartan-heather-poplin/F8040"
-html = requests.get(urlTest)
-soup = BeautifulSoup(html.text, "html.parser")
+# html = requests.get(urlTest)
+# soup = BeautifulSoup(html.text, "html.parser")
+
 
 def findBrand(soup):
   return "JCrew"
 
 def findPrice(soup):
-  price = soup.find('span', class_='tile__detail tile__detail--price--list')
-  print price
+  price = soup.find('span', class_='product__variation--price-list product__price--list')
   if price is not None:
     return price.text
 
@@ -31,12 +32,9 @@ def findProductName(soup):
     return product.text
 
 def findImageLink(soup):
-  image = soup.find('div', class_='product__image')
-  return image
-  # links = image.findAll('src')
-  # for link in links:
-  #   if link is not None:
-  #     return link
+  image = soup.find('img', class_='product__image')
+  if image is not None:
+    return image['src']
 
 def findDescription(soup):
   description = soup.find('p', {"class" : "intro"})
@@ -49,14 +47,33 @@ def findDescription(soup):
 # 	product = {'brand': findBrand(soup), 'name': findProductName(soup), 'price': findPrice(soup), 'image': findImageLink(soup), 'description': findDescription(soup), 'url': url}
 # 	products.insert(product)
 
-print findBrand(soup)
-print findPrice(soup)
-print findProductName(soup)
-print findImageLink(soup)
-print findDescription(soup)
 
-# totalLinks = []
-# j = 0
+totalLinks = []
+j = 0
+
+# not getting category links in soup!!!!!!!!!!!!!!!
+
+driver = webdriver.PhantomJS()
+driver.get(base_url)
+html = driver.page_source
+soup = BeautifulSoup(html, "html.parser")
+
+# ran = soup.find('div', class_= "c-header__department-nav js-header__department-nav")
+# print ran
+# men = soup.find('li', {"data-department" : "men"})
+# girls = soup.find('li', {"data-department" : "girls"})
+# boys = soup.find('li', {"data-department" : "boys"})
+
+# menues = [women, men, girls, boys]
+# print menues
+
+# for menu in menues:
+#   categories = menu.findAll("a", class_="nav-page__link is-capitalized js-menu__link--has-href")
+#   for a in categories:
+#     new_url = base_url + a["href"]
+#     totallinks.append(new_url)
+
+# print totalLinks
 
 # # bigMenu = ["http://www.oldnavy.com/browse/division.do?cid=5360&mlink=5151,11140339,Top_nav_W&visnav=1&clink=11140339", "http://www.oldnavy.com/browse/division.do?cid=5585&mlink=5151,11140339,Top_nav_WP&visnav=1&clink=11140339",
 # # "http://www.oldnavy.com/browse/division.do?cid=5758&mlink=5151,11140339,Top_nav_Mat&visnav=1&clink=11140339", "http://www.oldnavy.com/browse/division.do?cid=5360&mlink=5151,11140339,Top_nav_M&visnav=1&clink=11140339", 

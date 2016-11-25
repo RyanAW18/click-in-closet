@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup
 from selenium import webdriver
-import html5lib
-import platform
+import time
 import urllib
 import urllib2
 import requests
@@ -59,21 +58,14 @@ def findDescription(soup):
 # 	product = {'brand': findBrand(soup), 'name': findProductName(soup), 'price': findPrice(soup), 'image': findImageLink(soup), 'description': findDescription(soup), 'url': url}
 # 	products.insert(product)
 
-# print findBrand(soup)
-# print findPrice(soup)
-# print findProductName(soup)
-# print findImageLink(soup)
-# print findDescription(soup)
-
-
 totalLinks = []
 linkTotal = 0
 j = 0
 nextText = ""
 
 bigMenu = ["http://www.oldnavy.com/browse/division.do?cid=5360&mlink=5151,11140339,Top_nav_W&visnav=1&clink=11140339", "http://www.oldnavy.com/browse/division.do?cid=5585&mlink=5151,11140339,Top_nav_WP&visnav=1&clink=11140339",
-"http://www.oldnavy.com/browse/division.do?cid=5758&mlink=5151,11140339,Top_nav_Mat&visnav=1&clink=11140339", "http://www.oldnavy.com/browse/division.do?cid=5360&mlink=5151,11140339,Top_nav_M&visnav=1&clink=11140339", 
-"http://www.oldnavy.com/browse/division.do?cid=5360&mlink=5151,11140339,Top_nav_G&visnav=1&clink=11140339", "http://www.oldnavy.com/browse/division.do?cid=5360&mlink=5151,11140339,Top_nav_B&visnav=1&clink=11140339"]
+"http://www.oldnavy.com/browse/division.do?cid=5758&mlink=5151,11140339,Top_nav_Mat&visnav=1&clink=11140339", "http://oldnavy.gap.com/browse/division.do?cid=5155&mlink=5151,11140339,Top_nav_M&visnav=1&clink=11140339", 
+"http://oldnavy.gap.com/browse/division.do?cid=6027&mlink=5151,11140339,Top_nav_G&visnav=1&clink=11140339", "http://oldnavy.gap.com/browse/division.do?cid=5910&mlink=5151,11140339,Top_nav_B&visnav=1&clink=11140339"]
 
 for menu in bigMenu:
   driver = webdriver.PhantomJS()
@@ -91,7 +83,13 @@ for menu in bigMenu:
         links = item.findAll("a")
         for i in links:
           linkTotal = linkTotal + 1
-          totalLinks.append(i["href"])
+          varCheck = i["href"].split("/")
+          if varCheck[1] == "browse":
+            if base_url + i["href"] not in totalLinks:
+              totalLinks.append(base_url + i["href"])
+          else:
+            if i["href"] not in totalLinks:
+              totalLinks.append(i["href"])
         itemNext = item.findNextSibling()
         nextHeadSpan = itemNext.find("span", class_="sidebar-navigation--header--text")
         if nextHeadSpan is not None:
@@ -103,24 +101,32 @@ for menu in bigMenu:
       if nextText == "Deals":
         break
 
-print "got links"
-print linkTotal
-
-#ERROR SPOT!
-#issues with accessing all of the products on the page
 for link in totalLinks:
   print "link: " + link
   driver = webdriver.PhantomJS()
   driver.get(link)
+  # lazy loading method for scrolling
+  lastHeight = driver.execute_script("return document.body.scrollHeight")
+  pause = 0.5
+
+  while True:
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    time.sleep(pause)
+    newHeight = driver.execute_script("return document.body.scrollHeight")
+    if newHeight == lastHeight:
+        break
+    lastHeight = newHeight
+
+  # end of lazy scrolling method
   html = driver.page_source
-  soup = BeautifulSoup(html, "html5lib")
+  soup = BeautifulSoup(html, "html.parser")
   bigDiv = soup.findAll("div", class_="sp_sm spacing_small")
   for div in bigDiv:
     links = div.findAll("a")
     for i in links:
       j = j + 1
       productUrl = base_url + i["href"]
-      print productUrl
+      # print productUrl
         # print productUrl
         # postProduct(productUrl)
     print j
