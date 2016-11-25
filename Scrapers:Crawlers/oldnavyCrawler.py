@@ -14,16 +14,6 @@ products.create_index([("name", "text"), ("brand", "text")])
 
 base_url = "http://www.oldnavy.com"
 
-# driver = webdriver.PhantomJS()
-
-# driver.get("http://oldnavy.gap.com/browse/product.do?cid=84470&vid=1&pid=275038022")
-
-# html = driver.page_source
-
-# driver.close()
-
-# soup = BeautifulSoup(html, "html.parser")
-
 def findBrand(soup):
   return "Old Navy"
 
@@ -52,11 +42,11 @@ def findDescription(soup):
   else:
     return "No description available for this item"
 
-# def postProduct(url):
-# 	html = urllib.urlopen(url).read()
-# 	soup = BeautifulSoup(html, "html.parser")
-# 	product = {'brand': findBrand(soup), 'name': findProductName(soup), 'price': findPrice(soup), 'image': findImageLink(soup), 'description': findDescription(soup), 'url': url}
-# 	products.insert(product)
+def postProduct(url):
+	html = urllib.urlopen(url).read()
+	soup = BeautifulSoup(html, "html.parser")
+	product = {'brand': findBrand(soup), 'name': findProductName(soup), 'price': findPrice(soup), 'image': findImageLink(soup), 'description': findDescription(soup), 'url': url}
+	products.insert(product)
 
 totalLinks = []
 linkTotal = 0
@@ -126,9 +116,7 @@ for link in totalLinks:
     for i in links:
       j = j + 1
       productUrl = base_url + i["href"]
-      # print productUrl
-        # print productUrl
-        # postProduct(productUrl)
+      postProduct(productUrl)
     print j
 
 print j
