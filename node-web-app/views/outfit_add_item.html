@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title id="page-title">Click-In Closet: Product Name</title>
+		<title id="page-title">Click-In Closet: Add to Outfit</title>
 		<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css" />
 		<link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
 		<link href="https://fonts.googleapis.com/css?family=Arima+Madurai|Arima Madurai" rel="stylesheet">
 		<link rel="icon" type="image/ico" href="/images/hanger_black.ico" />
 	</head>
-	<body style="background-color:black" class="product_body">
-	  <div class="nav container-fluid">
+	<body class="search-body">
+		  <div class="nav container-fluid">
 			<div class="row">
 				<div class="col-xs-12 col-sm-12 col-md-3">
 					<div class="navbar-header">
@@ -35,47 +35,43 @@
 				</div>
 			</div>
 		  </div>
-	  <div style="margin-top: 1%; font-family: Arima Madurai">
-	  	<div class="row">
-		  	<div class="col-md-1 col-lg-1"></div>
-		  	<div class="col-sm-12 col-md-5 col-lg-5">
-		  		<center><img id="product_pic" class="product_pic" src="http://www.forever21.com/images/1_front_750/00214348-01.jpg" width="400px" style="margin-top:10%"></center>
-
-		  		<center><a class="product_link"><p id="site_link" style="margin-top:5%">View it on the BRAND website</p></a></center>
-			</div>
-			<div class="col-sm-12 col-md-5 col-lg-5">
-		  		<h1 id="product_title"></h1>
-		  		<a class="product_link"><img id="brand_pic" class="brand_pic" width="50%"/></a>
-		  		<h2 id="product_price"></h2>
-		  		<h3>Details</h3>
-		  			<p id="product_description"></p>
-
-		  		<center><button type="submit" class="btn btn-default" id="product_add_btn">Add to Current Outfit</button></center>
-			</div>
-			<div class="col-md-1 col-lg-1"></div>
-		</div>
+		  <div class="search-res-view">
+		  	<center><h2 id="result-header" style="padding: 2%">To which outfit would you like to add this item?</h2><center>
+		  	<div class="outfit-table">
+			  	<div class="col-md-1 col-lg-1"></div>
+			  	<div class="col-md-10 col-lg-10">
+				  	<table class="table" id="outfit-table">
+				  	</table>
+				</div>
+			  	<div class="col-md-1 col-lg-1"></div>
+			 </div>
+		  </div>
 		 <script type="text/javascript" src="/javascripts/common.js"></script>
-		<script type="text/javascript">
-
-			var email = getCookie("user_email");
-			console.log(document.cookie)
+		 <script>
+		 	var email = getCookie("user_email");
+		 	var productID = getQueryVariable(1)
+		 	var newItem = getProductData(productID)
 			var userJSON = getUserData(email)
 			document.getElementById("user-initial").innerHTML = userJSON["firstName"].charAt(0)
 
-			var productID = getQueryVariable(1)
-			var dataJSON = getProductData(productID)
-			document.getElementById("page-title").innerHTML = dataJSON["brand"] + " - " + dataJSON["name"]
-			document.getElementById("product_title").innerHTML = dataJSON["name"]
-			document.getElementById("product_pic").src = dataJSON["image"]
-			document.getElementById("product_price").innerHTML = dataJSON["price"]
-			document.getElementById("product_description").innerHTML = dataJSON["description"]
-			document.getElementById("brand_pic").src = "/images/" + dataJSON["brand"] + ".png"
-			var links = document.getElementsByClassName("product_link")
-			for (var i = 0; i < links.length; i++) {
-				links[i].href = dataJSON["url"]
-			}
-			
+		 	var outfitJSON = userJSON["outfits"]
+		 	var table = document.getElementById("outfit-table")
 
-
+	 		for (var i = 0; i < outfitJSON.length; i++) {
+	 			row = table.insertRow(i)
+	 		    row.className="search-result"
+	 		    var x = row.insertCell(0)
+	 		    x.innerHTML = outfitJSON[i]["name"]
+	 		    row.setAttribute("arrayIndex", i);
+	 		    row.onclick = (function() {
+	 		    	var email = getCookie("user_email");
+	 		    	var userJSON = getUserData(email)
+	 		    	var outfitJSON = userJSON["outfits"]
+	 		    	var i = this.getAttribute("arrayIndex")
+	 		    	outfitJSON[i]["items"].push(newItem)
+				});
+	 		}
 		</script>
 	</body>
+
+</html>

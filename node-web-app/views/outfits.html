@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title id="page-title">Click-In Closet: Your Outfits</title>
+		<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+		<link href="https://fonts.googleapis.com/css?family=Arima+Madurai|Arima Madurai" rel="stylesheet">
+		<link rel="icon" type="image/ico" href="/images/hanger_black.ico" />
+	</head>
+	<body class="search-body">
+		  <div class="nav container-fluid">
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-3">
+					<div class="navbar-header">
+						<a id="brandLink" class="navbar-brand" href="/home">
+							<img alt="Brand" src="/images/hanger.png" width="50px">
+						</a>
+						<a href="/home"><h1 id="userBanner" style="text-align:left; font-weight: 900; font-size:18px; margin-left:5px; float: left;">Click-In Closet</h1></a>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6 col-md-6" style="text-align:center;">
+				 <form class="navbar-form" role="search" style="width:100%;">
+					<div class="form-group" style="width:100%; padding-top:6px;">
+						<input type="text" class="form-control" placeholder="Search across catalogs..." id="search_bar">
+						<div class="btn btn-default" id="search_button" onclick="search()">Search</div>
+					</div>
+				 </form>
+				</div>
+				<div class="col-xs-12 col-sm-6 col-md-3">
+					<p class="navbar-text pull-right" style="font-family: Arima Madurai; color: white; font-size:16px; padding-top:6px;"><a href="/!">Logout</a></p>
+					<a href="">
+						<div class="navbar-text pull-right account-icon"><center><p id="user-initial" style="padding: 10%">?</p></center></div>
+					</a>
+					<p class="navbar-text pull-right" style="font-family: Arima Madurai; color: white; font-size:16px; padding-top:6px;"><a href="/outfits">Your Outfits</a></p>
+				</div>
+			</div>
+		  </div>
+		  <div class="search-res-view">
+		  	<center><h2 id="result-header">Your Outfits</h2><center>
+		  	<div class="outfit-table">
+			  	<div class="col-md-1 col-lg-1"></div>
+			  	<div class="col-md-10 col-lg-10">
+			  		<div class="btn btn-default pull-right add_button" onclick="showAddOutfit()">+</div>
+				  	<table class="table" id="outfit-table">
+				  	</table>
+				</div>
+			  	<div class="col-md-1 col-lg-1"></div>
+			 </div>
+		  </div>
+		 <script type="text/javascript" src="/javascripts/common.js"></script>
+		 <script>
+		 	var email = getCookie("user_email");
+			var userJSON = getUserData(email)
+			document.getElementById("user-initial").innerHTML = userJSON["firstName"].charAt(0)
+
+		 	var outfitJSON = userJSON["outfits"]
+		 	console.log(JSON.stringify(outfitJSON))
+		 	var table = document.getElementById("outfit-table")
+
+	 		for (var i = 0; i < outfitJSON.length; i++) {
+	 			row = table.insertRow(i)
+	 		    row.className="search-result"
+	 		    var x = row.insertCell(0)
+	 		    x.innerHTML = outfitJSON[i]["name"]
+	 		    // row.setAttribute("arrayIndex", i);
+	 		//     row.onclick = (function() {
+	 		//     	var email = getCookie("user_email");
+	 		//     	var userJSON = getUserData(email)
+	 		//     	var outfitJSON = userJSON["outfits"]
+	 		//     	var i = this.getAttribute("arrayIndex")
+	 		//     	outfitJSON[i]["items"].push(newItem)
+				// });
+	 		}
+
+	 		function showAddOutfit() {
+	 			var table = document.getElementById("outfit-table")
+	 			row = table.insertRow(0)
+	 			row.className="addOutfitBar"
+	 			var x = row.insertCell(0)
+	 			var nameBar = document.createElement('input');
+	 			nameBar.type="text"
+	 			nameBar.id="nameBar"
+	 			nameBar.placeholder="Name your new outfit..."
+	 			x.appendChild(nameBar)
+	 			var buttonCell = row.insertCell(1)
+	 			var button = document.createElement('div');
+	 			button.className="add_outfit_button"
+	 			button.innerHTML = "Add Outfit"
+	 			button.onclick = function(){
+	 				var name = document.getElementById("nameBar").value
+		 			if (name.length == 0) {
+		 				window.location.href = "/outfits"
+		 			}
+		 			else {
+		 				var url = "/outfits/add/" + name
+		 				window.location.href = url;
+		 			}
+	 			};
+	 			buttonCell.appendChild(button)
+	 		}
+
+	 		function addOutfit() {
+	 			
+
+	 		}
+		</script>
+	</body>
+
+</html>

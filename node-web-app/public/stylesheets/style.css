@@ -283,5 +283,58 @@ a:hover {
 	padding-top: 8%;
 }
 
+.add_button {
+	font-size: 15px;
+	border-radius:3px; 
+	background-color: #d69957; 
+	color:white;
+	transition: all .2s ease-in-out;
+	margin-bottom: 1%;
+	text-align: center;
+	width: auto;
+}
+
+.add_button:hover {
+	background-color: white; 
+	color:#d69957;
+}
+
+.add_outfit_button {
+	font-size: 15px;
+	border-radius:3px; 
+	background-color: #d69957; 
+	color:white;
+	transition: all .2s ease-in-out;
+	margin-bottom: 1%;
+	text-align: center;
+	width: 50%;
+	border: 1px solid white;
+}
+
+.add_outfit_button:hover {
+	background-color: white; 
+	color:#d69957;
+	border-color: #d69957;
+
+}
+
+.addOutfitBar {
+	font-size: 15px;
+}
+
+#nameBar {
+	border-radius:3px; 
+	border: 1px solid white;
+	margin:auto; 
+	width: 50%;
+	background-color: rgba(0,0,0,0); 
+	color:white;
+	box-shadow: none;
+	padding-left: 4px;
+	padding-right: 2px;
+}
+
+
+
 
 font-family: 'Arima Madurai', cursive;

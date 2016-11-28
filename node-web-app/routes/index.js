@@ -218,6 +218,51 @@ function redirectWrongPassword(res) {
 	res.redirect(link)
 }
 
+function addOutfit(req, name) {
+	var cookie = req.cookies;
+	if (cookie["user_email"] == undefined) return null
+	if (cookie["user_email"].length == 0) return null
+	else {
+		var email = cookie["user_email"]
+		var newOutfitJSON = {"name": name, "price": "$0.00", "items": []}
+		var outfitArray = JSON.parse(cookie["outfits"])
+		var contains = false;
+		for (var i = 0; i < outfitArray.length; i++) {
+			if (outfitArray[i]["name"] == name) {
+				contains = true
+				break
+			}
+		}
+		if (!contains) {
+			outfitArray.push(newOutfitJSON)
+			console.log("outfit length: " + outfitArray.length)
+			// Use connect method to connect to the Server
+			MongoClient.connect(url, function (err, db) {
+			  if (err) {
+			    console.log('Unable to connect to the mongoDB server. Error:', err);
+			  } else {
+			    //HURRAY!! We are connected. :)
+			    console.log('Database connection established');
+				}
+
+
+				 // do some work here with the database.
+			    var userDB = db.collection('userDB')
+			    userDB.update(
+			    	{'email' : email},
+			    	{
+	        		"$set": {
+			            "outfits": outfitArray
+	        		}
+	        		}
+	       		)
+			    //Close connection
+			    // db.close();
+			  });
+		}
+	}
+}
+
 
 
 
@@ -236,6 +281,23 @@ router.get('/:email/data', function(req, res, next) {
 	}
 	else res.redirect("/");
 	
+});
+
+
+router.get('/outfits', function(req, res, next) {
+	var loggedIn = checkLoginStatus(req);
+	if (loggedIn) res.render('outfits');
+	else res.redirect("/");
+});
+
+router.get('/outfits/add/:name', function(req, res, next) {
+	var name = req.params.name
+	var loggedIn = checkLoginStatus(req);
+	if (loggedIn) {
+		var ret = addOutfit(req, name)
+		res.redirect("/outfits")
+	}
+	else res.redirect("/");
 });
 
 
