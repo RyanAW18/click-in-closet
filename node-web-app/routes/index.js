@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var async = require('async');
+var http = require('http');
 
 //lets require/import the mongodb native drivers.
 var mongodb = require('mongodb');
@@ -75,6 +76,48 @@ function userFetch(account, callback, res) {
 	    // db.close();
 	  });
 
+}
+
+function getUserData(email) {
+    var options = {
+	  host: 'localhost:3000',
+	  path: '/' + email + '/data'
+	};
+
+	callback = function(response) {
+	  var str = '';
+
+	  //another chunk of data has been recieved, so append it to `str`
+	  response.on('data', function (chunk) {
+	    str += chunk;
+	  });
+
+	  //the whole response has been recieved, so we just print it out here
+	  response.on('end', function () {
+	    console.log(str);
+	  });
+	}
+
+	http.request(options, callback).end();
+}
+
+// function getUserData(email) {
+//     var xmlhttp = new XMLHttpRequest();
+//     var url = "/" + email + "/data";
+//     xmlhttp.onreadystatechange = function() {
+//       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+//       }
+//     };
+//     xmlhttp.open("GET", url, false);
+//     xmlhttp.send();
+//     return JSON.parse(xmlhttp.responseText);
+// }
+
+function getProductData(productID) {
+    var request = new request
+    var url = "/product/" + productID + "/data";
+    request.get(url)
+    return JSON.parse(request.body);
 }
 
 function createAccount(email, password, firstName, lastName, callbackSucc, callbackFail, res) {
@@ -263,6 +306,47 @@ function addOutfit(req, name) {
 	}
 }
 
+function addItemToOutfit(req, productID, index) {
+	var cookie = req.cookies;
+	if (cookie["user_email"] == undefined) return null
+	if (cookie["user_email"].length == 0) return null
+	else {
+		var email = cookie["user_email"]
+		var userJSON = getUserData(email)
+		console.log(userJSON)
+		var outfitArray = userJSON["outfits"]
+		var outfitJSON = outfitArray[index];
+		var itemArray = outfitJSON["items"];
+		var productJSON = getProductData(productID)
+		itemArray.push(productJSON)
+		outfitArray.push(newOutfitJSON)
+		console.log("outfit length: " + outfitArray.length)
+		// Use connect method to connect to the Server
+		MongoClient.connect(url, function (err, db) {
+		  if (err) {
+		    console.log('Unable to connect to the mongoDB server. Error:', err);
+		  } else {
+		    //HURRAY!! We are connected. :)
+		    console.log('Database connection established');
+			}
+
+
+			 // do some work here with the database.
+		    var userDB = db.collection('userDB')
+		    userDB.update(
+		    	{'email' : email},
+		    	{
+        		"$set": {
+		            "outfits": outfitArray
+        		}
+        		}
+       		)
+		    //Close connection
+		    // db.close();
+		  });
+	}
+}
+
 
 
 
@@ -294,7 +378,26 @@ router.get('/outfits/add/:name', function(req, res, next) {
 	var name = req.params.name
 	var loggedIn = checkLoginStatus(req);
 	if (loggedIn) {
-		var ret = addOutfit(req, name)
+		addOutfit(req, name)
+		res.redirect("/outfits")
+	}
+	else res.redirect("/");
+});
+
+router.get('/outfits/add_item/:productID', function(req, res, next) {
+	var loggedIn = checkLoginStatus(req);
+	if (loggedIn) {
+		res.render("outfit_add_item")
+	}
+	else res.redirect("/");
+});
+
+router.get('/outfits/add_item/:productID/:index', function(req, res, next) {
+	var productID = req.params.productID
+	var index = req.params.index
+	var loggedIn = checkLoginStatus(req);
+	if (loggedIn) {
+		addItemToOutfit(req, productID, index)
 		res.redirect("/outfits")
 	}
 	else res.redirect("/");

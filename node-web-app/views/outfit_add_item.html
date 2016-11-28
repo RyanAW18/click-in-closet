@@ -51,24 +51,24 @@
 		 	var email = getCookie("user_email");
 		 	var productID = getQueryVariable(1)
 		 	var newItem = getProductData(productID)
+		 	console.log(JSON.stringify(newItem))
 			var userJSON = getUserData(email)
 			document.getElementById("user-initial").innerHTML = userJSON["firstName"].charAt(0)
 
-		 	var outfitJSON = userJSON["outfits"]
+		 	var outfitArray = userJSON["outfits"]
 		 	var table = document.getElementById("outfit-table")
 
-	 		for (var i = 0; i < outfitJSON.length; i++) {
+	 		for (var i = 0; i < outfitArray.length; i++) {
 	 			row = table.insertRow(i)
 	 		    row.className="search-result"
 	 		    var x = row.insertCell(0)
-	 		    x.innerHTML = outfitJSON[i]["name"]
+	 		    x.innerHTML = outfitArray[i]["name"]
 	 		    row.setAttribute("arrayIndex", i);
 	 		    row.onclick = (function() {
-	 		    	var email = getCookie("user_email");
-	 		    	var userJSON = getUserData(email)
-	 		    	var outfitJSON = userJSON["outfits"]
+	 		    	var productID = getQueryVariable(1)
 	 		    	var i = this.getAttribute("arrayIndex")
-	 		    	outfitJSON[i]["items"].push(newItem)
+	 		    	var url = "/outfits/add_item/" + productID + "/" + i;
+	 		    	window.location.href = url
 				});
 	 		}
 		</script>
