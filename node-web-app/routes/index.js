@@ -79,39 +79,24 @@ function userFetch(account, callback, res) {
 }
 
 function getUserData(email) {
-    var options = {
-	  host: 'localhost:3000',
-	  path: '/' + email + '/data'
-	};
+	var pathURL = "/" + email + "/data"
+	var options = {
+        host: 'localhost',
+        port: 3000,
+        path: pathURL,
+        method: 'GET',
+        headers: {
+            accept: 'application/json'
+        }
+    };
 
-	callback = function(response) {
-	  var str = '';
-
-	  //another chunk of data has been recieved, so append it to `str`
-	  response.on('data', function (chunk) {
-	    str += chunk;
-	  });
-
-	  //the whole response has been recieved, so we just print it out here
-	  response.on('end', function () {
-	    console.log(str);
-	  });
-	}
-
-	http.request(options, callback).end();
+var x = http.request(options,function(res){
+    console.log("Connected");
+    res.on('data',function(data){
+        console.log(data);
+    });
+});
 }
-
-// function getUserData(email) {
-//     var xmlhttp = new XMLHttpRequest();
-//     var url = "/" + email + "/data";
-//     xmlhttp.onreadystatechange = function() {
-//       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-//       }
-//     };
-//     xmlhttp.open("GET", url, false);
-//     xmlhttp.send();
-//     return JSON.parse(xmlhttp.responseText);
-// }
 
 function getProductData(productID) {
     var request = new request
@@ -388,6 +373,14 @@ router.get('/outfits/add_item/:productID', function(req, res, next) {
 	var loggedIn = checkLoginStatus(req);
 	if (loggedIn) {
 		res.render("outfit_add_item")
+	}
+	else res.redirect("/");
+});
+
+router.get('/outfits/:index/:name', function(req, res, next) {
+	var loggedIn = checkLoginStatus(req);
+	if (loggedIn) {
+		res.render("outfit_page")
 	}
 	else res.redirect("/");
 });

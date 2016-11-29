@@ -70,6 +70,7 @@
 			document.getElementById("product_price").innerHTML = dataJSON["price"]
 			document.getElementById("product_description").innerHTML = dataJSON["description"]
 			document.getElementById("brand_pic").src = "/images/" + dataJSON["brand"] + ".png"
+			document.getElementById("site_link").innerHTML = "View it on the " + dataJSON["brand"] + " website"
 			var links = document.getElementsByClassName("product_link")
 			for (var i = 0; i < links.length; i++) {
 				links[i].href = dataJSON["url"]

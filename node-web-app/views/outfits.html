@@ -53,36 +53,64 @@
 			var userJSON = getUserData(email)
 			document.getElementById("user-initial").innerHTML = userJSON["firstName"].charAt(0)
 
-		 	var outfitJSON = userJSON["outfits"]
+		 	var outfitArray = userJSON["outfits"]
+		 	if (outfitArray.length == 0) {
+		 		document.getElementById("result-header").innerHTML = "You have not made any outfits"
+		 	}
 		 	console.log(JSON.stringify(outfitJSON))
 		 	var table = document.getElementById("outfit-table")
 
-	 		for (var i = 0; i < outfitJSON.length; i++) {
+	 		for (var i = 0; i < outfitArray.length; i++) {
 	 			row = table.insertRow(i)
 	 		    row.className="search-result"
-	 		    var x = row.insertCell(0)
-	 		    x.innerHTML = outfitJSON[i]["name"]
-	 		    // row.setAttribute("arrayIndex", i);
-	 		//     row.onclick = (function() {
-	 		//     	var email = getCookie("user_email");
-	 		//     	var userJSON = getUserData(email)
-	 		//     	var outfitJSON = userJSON["outfits"]
-	 		//     	var i = this.getAttribute("arrayIndex")
-	 		//     	outfitJSON[i]["items"].push(newItem)
-				// });
+	 		    var nameCell = row.insertCell(0)
+	 		    nameCell.innerHTML = outfitArray[i]["name"]
+	 		    nameCell.style="vertical-align: middle; width: 25%"
+	 		    var outfitJSON = outfitArray[i]
+	 		    var items = outfitJSON["items"]
+	 		    var j = 0;
+	 		    for (; j < 3; j++) {
+	 		    	var itemCell = row.insertCell(j + 1)
+	 		    	itemCell.style="width: 25%"
+	 		    	if (j < items.length) {
+	 		    		var img = document.createElement('img');
+		 		    	img.src = items[j]["image"]
+		 		    	img.style="width: 50%; margin-left: 30%"
+		 		    	itemCell.appendChild(img)
+
+	 		    	}
+	 		    }
+	 		    var priceCell = row.insertCell(j+1)
+	 		    priceCell.innerHTML=outfitJSON["price"]
+	 		    priceCell.style="vertical-align: middle; width: 25%"
+
+	 		    
+	 		    row.setAttribute("arrayIndex", i);
+	 		    row.onclick = (function() {
+	 		    	var email = getCookie("user_email");
+	 		    	var userJSON = getUserData(email)
+	 		    	var i = this.getAttribute("arrayIndex")
+	 		    	var outfitJSON = userJSON["outfits"][i]
+	 		    	var name = outfitJSON["name"]
+	 		    	var url = "/outfits/" + i + "/" + name 
+	 		    	window.location.href= url;
+				});
 	 		}
 
 	 		function showAddOutfit() {
 	 			var table = document.getElementById("outfit-table")
 	 			row = table.insertRow(0)
 	 			row.className="addOutfitBar"
+	 			
 	 			var x = row.insertCell(0)
+	 			row.insertCell(1)
 	 			var nameBar = document.createElement('input');
 	 			nameBar.type="text"
 	 			nameBar.id="nameBar"
 	 			nameBar.placeholder="Name your new outfit..."
 	 			x.appendChild(nameBar)
-	 			var buttonCell = row.insertCell(1)
+	 			row.insertCell(2)
+	 			var buttonCell = row.insertCell(3)
 	 			var button = document.createElement('div');
 	 			button.className="add_outfit_button"
 	 			button.innerHTML = "Add Outfit"
