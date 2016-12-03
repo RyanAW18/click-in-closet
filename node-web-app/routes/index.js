@@ -221,48 +221,66 @@ function redirectWrongPassword(res) {
 	res.redirect(link)
 }
 
-function addOutfit(req, name) {
+function addOutfit(req, name, callback, res) {
 	var cookie = req.cookies;
 	if (cookie["user_email"] == undefined) return null
 	if (cookie["user_email"].length == 0) return null
 	else {
 		var email = cookie["user_email"]
 		var newOutfitJSON = {"name": name, "price": "$0.00", "items": []}
-		var outfitArray = JSON.parse(cookie["outfits"])
-		var contains = false;
-		for (var i = 0; i < outfitArray.length; i++) {
-			if (outfitArray[i]["name"] == name) {
-				contains = true
-				break
+
+		MongoClient.connect(url, function (err, db) {
+		  if (err) {
+		    console.log('Unable to connect to the mongoDB server. Error:', err);
+		  } else {
+		    //HURRAY!! We are connected. :)
+		    console.log('Database connection established');
 			}
-		}
-		if (!contains) {
-			outfitArray.push(newOutfitJSON)
-			console.log("outfit length: " + outfitArray.length)
-			// Use connect method to connect to the Server
-			MongoClient.connect(url, function (err, db) {
-			  if (err) {
-			    console.log('Unable to connect to the mongoDB server. Error:', err);
-			  } else {
-			    //HURRAY!! We are connected. :)
-			    console.log('Database connection established');
-				}
 
 
-				 // do some work here with the database.
-			    var userDB = db.collection('userDB')
-			    userDB.update(
-			    	{'email' : email},
-			    	{
-	        		"$set": {
-			            "outfits": outfitArray
-	        		}
-	        		}
-	       		)
-			    //Close connection
-			    // db.close();
-			  });
+			 // do some work here with the database.
+		    var userDB = db.collection('userDB')
+		    userDB.find({'email' : email}).toArray(function(err, result) {
+		    	if (err) {
+		        	console.log(err);
+		      } else if (result.length) {
+		        	console.log("Found account" + email)
+		        	callback(result[0], newOutfitJSON, userDB, name, email, res)
+
+		      } else {
+		        	console.log('No document(s) found with defined "find" criteria!');
+		        	return 0
+		      }
+		    })
+
+		    //Close connection
+		    // db.close();
+		  });
+	}
+}
+
+function addEmptyOutfit(userJSON, newOutfitJSON, userDB, name, email) {
+
+	var outfitArray = userJSON["outfits"]
+	var contains = false;
+	for (var i = 0; i < outfitArray.length; i++) {
+		if (outfitArray[i]["name"] == name) {
+			contains = true
+			break
 		}
+	}
+
+	if (!contains) {
+		outfitArray.push(newOutfitJSON)
+		console.log("outfit length: " + outfitArray.length)
+	    userDB.update(
+	    	{'email' : email},
+	    	{
+    		"$set": {
+	            "outfits": outfitArray
+    				}
+    		}
+   		)
 	}
 }
 
@@ -292,7 +310,9 @@ function addItemToOutfit_User(req, productID, index, callback_prod, callback_up)
 		        	console.log(err);
 		      } else if (result.length) {
 		        	console.log("Found account" + email)
-		        	callback_prod(result[0], productID, index, callback_up, email, db)
+		        	var ret = callback_prod(result[0], productID, index, callback_up, email, db)
+		        	if (ret == null) return null
+
 		      } else {
 		        	console.log('No document(s) found with defined "find" criteria!');
 		        	return 0
@@ -312,9 +332,17 @@ function addItemToOutfit_Product(userJSON, productID, index, callback, email, db
 	console.log("Product ID: " + productID)
 	var outfitArray = userJSON["outfits"]
 	var outfitJSON = outfitArray[index];
+	var items = outfitJSON["items"]
 	console.log(outfitJSON)
 
 	var o_id = new ObjectID(productID)
+
+	for (var i = 0; i < items.length; i++) {
+		var item = items[i]
+		if (item["_id"] == productID) {
+			return null
+		}
+	}
 
 	var productDB = db.collection('productsMen')
 	productDB.find({'_id' : o_id}).toArray(function(err, result) {
@@ -336,6 +364,8 @@ function addItemToOutfit_Update(productJSON, outfitJSON, outfitArray, index, ema
 	console.log("Add item --> update level")
 	var itemArray = outfitJSON["items"];
 	itemArray.push(productJSON)
+	var price = updateOutfitPrice(itemArray)
+	outfitJSON["price"] = price
 	outfitArray[index] = outfitJSON;
 	console.log("outfit length: " + outfitArray.length)
 	// Use connect method to connect to the Server
@@ -363,6 +393,124 @@ function addItemToOutfit_Update(productJSON, outfitJSON, outfitArray, index, ema
 	  });
 }
 
+function updateOutfitPrice(items) {
+	var price = 0;
+	for (var i = 0; i < items.length; i++) {
+		var priceStringItem = items[i]["price"]
+		var priceItem = parseFloat(priceStringItem.substring(1))
+		price += priceItem;
+	}
+	var newPrice = price.toFixed(2)
+	var newPriceString = "$" + newPrice
+	return newPriceString
+}
+
+function deleteOutfit(index, callback, req) {
+	var cookie = req.cookies;
+	if (cookie["user_email"] == undefined) return null
+	if (cookie["user_email"].length == 0) return null
+	else {
+		var email = cookie["user_email"]
+
+		MongoClient.connect(url, function (err, db) {
+		  if (err) {
+		    console.log('Unable to connect to the mongoDB server. Error:', err);
+		  } else {
+		    //HURRAY!! We are connected. :)
+		    console.log('Database connection established');
+			}
+
+
+			 // do some work here with the database.
+		    var userDB = db.collection('userDB')
+		    userDB.find({'email' : email}).toArray(function(err, result) {
+		    	if (err) {
+		        	console.log(err);
+		      } else if (result.length) {
+		        	console.log("Found account" + email)
+		        	callback(result[0], index, userDB, email)
+
+		      } else {
+		        	console.log('No document(s) found with defined "find" criteria!');
+		        	return 0
+		      }
+		    })
+
+		    //Close connection
+		    // db.close();
+		  });
+	}
+}
+
+function removeOutfit(userJSON, index, userDB, email) {
+	var outfitArray = userJSON["outfits"]
+	outfitArray.splice(index, 1)
+    userDB.update(
+    	{'email' : email},
+    	{
+		"$set": {
+            "outfits": outfitArray
+				}
+		}
+		)
+}
+
+function deleteItemFromOutfit(outfitIndex, itemIndex, callback, req) {
+	var cookie = req.cookies;
+	if (cookie["user_email"] == undefined) return null
+	if (cookie["user_email"].length == 0) return null
+	else {
+		var email = cookie["user_email"]
+
+		MongoClient.connect(url, function (err, db) {
+		  if (err) {
+		    console.log('Unable to connect to the mongoDB server. Error:', err);
+		  } else {
+		    //HURRAY!! We are connected. :)
+		    console.log('Database connection established');
+			}
+
+
+			 // do some work here with the database.
+		    var userDB = db.collection('userDB')
+		    userDB.find({'email' : email}).toArray(function(err, result) {
+		    	if (err) {
+		        	console.log(err);
+		      } else if (result.length) {
+		        	console.log("Found account" + email)
+		        	callback(result[0], outfitIndex, itemIndex, userDB, email)
+
+		      } else {
+		        	console.log('No document(s) found with defined "find" criteria!');
+		        	return 0
+		      }
+		    })
+
+		    //Close connection
+		    // db.close();
+		  });
+	}
+}
+
+function removeItemFromOutfit(userJSON, outfitIndex, itemIndex, userDB, email) {
+	var outfitArray = userJSON["outfits"]
+	var outfitJSON = outfitArray[outfitIndex]
+	var items = outfitJSON["items"]
+	items.splice(itemIndex, 1)
+	var price = updateOutfitPrice(items);
+	outfitJSON["price"] = price
+	outfitArray[outfitIndex] = outfitJSON
+    userDB.update(
+    	{'email' : email},
+    	{
+		"$set": {
+            "outfits": outfitArray
+				}
+		}
+		)
+
+}
+
 
 /* GET home page. */
 router.get('/home', function(req, res, next) {
@@ -388,11 +536,40 @@ router.get('/outfits', function(req, res, next) {
 	else res.redirect("/");
 });
 
+router.get('/outfits/delete/:index', function(req, res, next) {
+	var index = req.params.index
+	var loggedIn = checkLoginStatus(req);
+	if (loggedIn) {
+		deleteOutfit(index, removeOutfit, req) 
+		res.redirect("/outfits")
+	}
+	else res.redirect("/");
+});
+
+router.get('/outfits/delete_item/:outfitIndex/:name/:itemIndex', function(req, res, next) {
+	var outfitIndex = req.params.outfitIndex
+	var itemIndex = req.params.itemIndex
+	var name = req.params.name
+	var loggedIn = checkLoginStatus(req);
+	if (loggedIn) {
+		deleteItemFromOutfit(outfitIndex, itemIndex, removeItemFromOutfit, req)
+		var url = "/outfits/" + outfitIndex + "/" + name
+		res.redirect(url)
+	}
+	else res.redirect("/");
+});
+
+router.get('/outfits#', function(req, res, next) {
+	var loggedIn = checkLoginStatus(req);
+	if (loggedIn) res.render('outfits');
+	else res.redirect("/");
+});
+
 router.get('/outfits/add/:name', function(req, res, next) {
 	var name = req.params.name
 	var loggedIn = checkLoginStatus(req);
 	if (loggedIn) {
-		addOutfit(req, name)
+		addOutfit(req, name, addEmptyOutfit)
 		res.redirect("/outfits")
 	}
 	else res.redirect("/");
@@ -414,15 +591,20 @@ router.get('/outfits/:index/:name', function(req, res, next) {
 	else res.redirect("/");
 });
 
-router.get('/outfits/add_item/:productID/:index', function(req, res, next) {
+router.get('/outfits/add_item/:productID/:index/:name', function(req, res, next) {
 	var productID = req.params.productID
 	console.log("Product ID: " + productID)
 	var index = req.params.index
+	var name = req.params.name
 	console.log(index)
 	var loggedIn = checkLoginStatus(req);
 	if (loggedIn) {
-		addItemToOutfit_User(req, productID, index, addItemToOutfit_Product, addItemToOutfit_Update)
-		res.redirect("/outfits")
+		var ret = addItemToOutfit_User(req, productID, index, addItemToOutfit_Product, addItemToOutfit_Update)
+		if (ret == null) {
+			res.redirect("/outfits#")
+		}
+		var url = "/outfits/" + index + "/" + name
+		res.redirect(url)
 	}
 	else res.redirect("/");
 });

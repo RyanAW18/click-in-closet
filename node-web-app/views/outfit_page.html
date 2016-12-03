@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title id="page-title">Outfit: Name</title>
-		<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="/stylesheets/css/bootstrap.css" />
 		<link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
 		<link href="https://fonts.googleapis.com/css?family=Arima+Madurai|Proxima Nova" rel="stylesheet">
 		<link rel="icon" type="image/ico" href="/images/hanger_black.ico" />
@@ -48,38 +48,21 @@
 				<a class="name_link" href=""><p class="item_name"></p></a>
 				<p class="item_price"></p>
 				<img class="item_brand"/>
+				<center><div class="remove-item-button">Remove this item</div></center>
 			</div>
 			<div class="col-md-4 col-lg-4 outfit_item">
 				<a class="picture_link" href=""><img class="item_image"/></a>
 				<a class="name_link" href=""><p class="item_name"></p></a>
 				<p class="item_price"></p>
 				<img class="item_brand"/>
+				<center><div class="remove-item-button">Remove this item</div></center>
 			</div>
 			<div class="col-md-4 col-lg-4 outfit_item">
 				<a class="picture_link" href=""><img class="item_image"/></a>
 				<a class="name_link" href=""><p class="item_name"></p></a>
 				<p class="item_price"></p>
 				<img class="item_brand"/>
-			</div>
-		</div>
-		<div class="row" style="margin-bottom: 2%">
-			<div class="col-md-4 col-lg-4 outfit_item">
-				<a class="picture_link" href=""><img class="item_image"/></a>
-				<a class="name_link" href=""><p class="item_name"></p></a>
-				<p class="item_price"></p>
-				<img class="item_brand"/>
-			</div>
-			<div class="col-md-4 col-lg-4 outfit_item">
-				<a class="picture_link" href=""><img class="item_image"/></a>
-				<a class="name_link" href=""><p class="item_name"></p></a>
-				<p class="item_price"></p>
-				<img class="item_brand"/>
-			</div>
-			<div class="col-md-4 col-lg-4 outfit_item">
-				<a class="picture_link" href=""><img class="item_image"/></a>
-				<a class="name_link" href=""><p class="item_name"></p></a>
-				<p class="item_price"></p>
-				<img class="item_brand"/>
+				<center><div class="remove-item-button">Remove this item</div></center>
 			</div>
 		</div>
 		<div class="row" style="margin-bottom: 2%">
@@ -88,27 +71,51 @@
 				<a class="name_link" href=""><p class="item_name"></p></a>
 				<p class="item_price"></p>
 				<img class="item_brand"/>
+				<center><div class="remove-item-button">Remove this item</div></center>
 			</div>
 			<div class="col-md-4 col-lg-4 outfit_item">
 				<a class="picture_link" href=""><img class="item_image"/></a>
 				<a class="name_link" href=""><p class="item_name"></p></a>
 				<p class="item_price"></p>
 				<img class="item_brand"/>
+				<center><div class="remove-item-button">Remove this item</div></center>
 			</div>
 			<div class="col-md-4 col-lg-4 outfit_item">
 				<a class="picture_link" href=""><img class="item_image"/></a>
 				<a class="name_link" href=""><p class="item_name"></p></a>
 				<p class="item_price"></p>
 				<img class="item_brand"/>
+				<center><div class="remove-item-button">Remove this item</div></center>
+			</div>
+		</div>
+		<div class="row" style="margin-bottom: 2%">
+			<div class="col-md-4 col-lg-4 outfit_item">
+				<a class="picture_link" href=""><img class="item_image"/></a>
+				<a class="name_link" href=""><p class="item_name"></p></a>
+				<p class="item_price"></p>
+				<img class="item_brand"/>
+				<center><div class="remove-item-button">Remove this item</div></center>
+			</div>
+			<div class="col-md-4 col-lg-4 outfit_item">
+				<a class="picture_link" href=""><img class="item_image"/></a>
+				<a class="name_link" href=""><p class="item_name"></p></a>
+				<p class="item_price"></p>
+				<img class="item_brand"/>
+				<center><div class="remove-item-button">Remove this item</div></center>
+			</div>
+			<div class="col-md-4 col-lg-4 outfit_item">
+				<a class="picture_link" href=""><img class="item_image"/></a>
+				<a class="name_link" href=""><p class="item_name"></p></a>
+				<p class="item_price"></p>
+				<img class="item_brand"/>
+				<center><div class="remove-item-button">Remove this item</div></center>
 			</div>
 		</div>
 
 		<script type="text/javascript" src="/javascripts/common.js"></script>
 		<script type="text/javascript">
 			var index = getQueryVariable(2)
-			console.log(index)
 			var email = getCookie("user_email");
-			console.log(document.cookie)
 			var userJSON = getUserData(email)
 			document.getElementById("user-initial").innerHTML = userJSON["firstName"].charAt(0)
 			var outfitJSON = userJSON["outfits"][index]
@@ -122,6 +129,7 @@
 			var itemBrands = document.getElementsByClassName("item_brand")
 			var pictureLinks = document.getElementsByClassName("picture_link")
 			var nameLinks = document.getElementsByClassName("name_link")
+			var removeButtons = document.getElementsByClassName("remove-item-button")
 			for (var i = 0; i < items.length; i++) {
 				itemPics[i].src=items[i]["image"]
 				itemNames[i].innerHTML=items[i]["name"]
@@ -131,15 +139,17 @@
 				var productLink = "/product/" + items[i]["_id"]
 				pictureLinks[i].href=productLink
 				nameLinks[i].href=productLink
+				removeButtons[i].style = "display: block"
+				removeButtons[i].onclick = (function(i) {
+					var email = getCookie("user_email");
+					var outfitIndex = getQueryVariable(2)
+					var userJSON = getUserData(email)
+					var outfitJSON = userJSON["outfits"][outfitIndex]
+					var name = outfitJSON["name"]
+	 		    	var url = "/outfits/delete_item/" + outfitIndex + "/" + name + "/" + i
+	 		    	window.location.href= url;
+				});
+
 			}
-
-			function addItemToOutfit() {
-				var productID = getQueryVariable(1)
-				var url = "/outfits/add_item/" + productID
-				window.location.href = url;
-			}
-			
-
-
 		</script>
 	</body>

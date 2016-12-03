@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title id="page-title">Click-In Closet: Add to Outfit</title>
-		<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="/stylesheets/css/bootstrap.css" />
 		<link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
 		<link href="https://fonts.googleapis.com/css?family=Arima+Madurai|Proxima Nova" rel="stylesheet">
 		<link rel="icon" type="image/ico" href="/images/hanger_black.ico" />
@@ -84,9 +84,14 @@
 	 		    priceCell.innerHTML=outfitJSON["price"]
 	 		    priceCell.style="vertical-align: middle; width: 25%"
 	 		    row.onclick = (function() {
+	 		    	var email = getCookie("user_email");
+					var userJSON = getUserData(email)
+					var outfitArray = userJSON["outfits"]
 	 		    	var productID = getQueryVariable(1)
 	 		    	var i = this.getAttribute("arrayIndex")
-	 		    	var url = "/outfits/add_item/" + productID + "/" + i;
+	 		    	var outfitJSON = outfitArray[i]
+	 		    	var name = outfitJSON["name"]
+	 		    	var url = "/outfits/add_item/" + productID + "/" + i + "/" + name;
 	 		    	window.location.href = url
 				});
 	 		}

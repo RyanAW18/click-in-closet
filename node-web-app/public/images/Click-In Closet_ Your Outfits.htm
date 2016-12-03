@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html>
-	<head>
+<!-- saved from url=(0030)http://localhost:3000/outfits# -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title id="page-title">Click-In Closet: Your Outfits</title>
-		<link rel="stylesheet" type="text/css" href="/stylesheets/css/bootstrap.css" />
-		<link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
-		<link href="https://fonts.googleapis.com/css?family=Arima+Madurai|Proxima Nova" rel="stylesheet">
-		<link rel="icon" type="image/ico" href="/images/hanger_black.ico" />
+		<link rel="stylesheet" type="text/css" href="./Click-In Closet_ Your Outfits_files/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="./Click-In Closet_ Your Outfits_files/style.css">
+		<link href="./Click-In Closet_ Your Outfits_files/css" rel="stylesheet">
+		<link rel="icon" type="image/ico" href="http://localhost:3000/images/hanger_black.ico">
 	</head>
 	<body class="search-body">
 		  <div class="nav container-fluid">
 			<div class="row">
 				<div class="col-xs-12 col-sm-12 col-md-3">
 					<div class="navbar-header">
-						<a id="brandLink" class="navbar-brand" href="/home">
-							<img alt="Brand" src="/images/hanger.png" width="50px">
+						<a id="brandLink" class="navbar-brand" href="http://localhost:3000/home">
+							<img alt="Brand" src="./Click-In Closet_ Your Outfits_files/hanger.png" width="50px">
 						</a>
-						<a href="/home"><h1 id="userBanner" style="text-align:left; font-size:18px; margin-left:5px; float: left;">Click-In Closet</h1></a>
+						<a href="http://localhost:3000/home"><h1 id="userBanner" style="text-align:left; font-size:18px; margin-left:5px; float: left;">Click-In Closet</h1></a>
 					</div>
 				</div>
 				<div class="col-xs-12 col-sm-6 col-md-6" style="text-align:center;">
@@ -27,11 +27,11 @@
 				 </form>
 				</div>
 				<div class="col-xs-12 col-sm-6 col-md-3">
-					<p class="navbar-text pull-right" style="font-family: Proxima Nova; color: white; font-size:16px; padding-top:6px;"><a href="/!">Logout</a></p>
-					<a href="">
-						<div class="navbar-text pull-right account-icon"><center><p id="user-initial">?</p></center></div>
+					<p class="navbar-text pull-right" style="font-family: Proxima Nova; color: white; font-size:16px; padding-top:6px;"><a href="http://localhost:3000/!">Logout</a></p>
+					<a href="http://localhost:3000/outfits">
+						<div class="navbar-text pull-right account-icon"><center><p id="user-initial">T</p></center></div>
 					</a>
-					<p class="navbar-text pull-right" style="font-family: Proxima Nova; color: white; font-size:16px; padding-top:6px;"><a href="/outfits">Your Outfits</a></p>
+					<p class="navbar-text pull-right" style="font-family: Proxima Nova; color: white; font-size:16px; padding-top:6px;"><a href="http://localhost:3000/outfits">Your Outfits</a></p>
 				</div>
 			</div>
 		  </div>
@@ -44,12 +44,12 @@
 			  			<span class="glyphicon glyphicon-plus"></span>
 			  		</div>
 				  	<table class="table" id="outfit-table">
-				  	</table>
+				  	<tbody><tr class="search-result" arrayindex="0"><td style="vertical-align: middle; width: 25%;">outfit 1</td><td style="width: 25%;"><img src="./Click-In Closet_ Your Outfits_files/pPOLO2-24522843_lifestyle_v330.jpg" style="width: 50%; margin-left: 30%;"></td><td style="width: 25%;"><img src="./Click-In Closet_ Your Outfits_files/00234794-01.jpg" style="width: 50%; margin-left: 30%;"></td><td style="width: 25%;"></td><td style="vertical-align: middle; width: 25%;">$128.89</td><td style="vertical-align: middle;"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></td></tr></tbody></table>
 				</div>
 			  	<div class="col-md-1 col-lg-1"></div>
 			 </div>
-		  </div>
-		 <script type="text/javascript" src="/javascripts/common.js"></script>
+		  </center></center></div>
+		 <script type="text/javascript" src="./Click-In Closet_ Your Outfits_files/common.js"></script>
 		 <script>
 		 	var email = getCookie("user_email");
 			var userJSON = getUserData(email)
@@ -64,27 +64,19 @@
 
 	 		for (var i = 0; i < outfitArray.length; i++) {
 	 			row = table.insertRow(i)
-	 			row.setAttribute("arrayIndex", i);
 	 		    row.className="search-result"
-
 	 		    var nameCell = row.insertCell(0)
 	 		    nameCell.innerHTML = outfitArray[i]["name"]
-	 		    nameCell.style="vertical-align: middle; width: 14%"
-
-
-	 		    var numCell = row.insertCell(1)
-	 		    numCell.innerHTML = outfitArray[i]["items"].length + " item(s)"
-	 		    numCell.style="vertical-align: middle; width: 16%"
-
+	 		    nameCell.style="vertical-align: middle; width: 25%"
 	 		    var outfitJSON = outfitArray[i]
 	 		    var items = outfitJSON["items"]
-	 		    for (var j = 1; j < 4; j++) {
+	 		    var j = 0;
+	 		    for (; j < 3; j++) {
 	 		    	var itemCell = row.insertCell(j + 1)
-	 		    	itemCell.style="width: 14%"
-	 		    	var k = j - 1;
-	 		    	if (k < items.length) {
+	 		    	itemCell.style="width: 25%"
+	 		    	if (j < items.length) {
 	 		    		var img = document.createElement('img');
-		 		    	img.src = items[k]["image"]
+		 		    	img.src = items[j]["image"]
 		 		    	img.style="width: 50%; margin-left: 30%"
 		 		    	itemCell.appendChild(img)
 
@@ -92,24 +84,25 @@
 	 		    }
 	 		    var priceCell = row.insertCell(j+1)
 	 		    priceCell.innerHTML=outfitJSON["price"]
-	 		    priceCell.style="vertical-align: middle; width: 14%"
-
-	 		    var email = getCookie("user_email");
- 		    	var userJSON = getUserData(email)
- 		    	var outfitJSON = userJSON["outfits"][i]
- 		    	var name = outfitJSON["name"]
- 		    	var delUrl = "/outfits/delete/" + i  
+	 		    priceCell.style="vertical-align: middle; width: 25%"
 
 	 		    var xCell = row.insertCell(j+2)
-	 		    xCell.style="vertical-align: middle; width: 14%"
-	 		    var xLink = document.createElement('a');
-	 		    xLink.href= delUrl
+	 		    xCell.style="vertical-align: middle"
 	 		    var xButton = document.createElement('span');
 	 		    xButton.className = "glyphicon glyphicon-remove"
+	 		    xButton.onclick = (function() {
+	 		    	var email = getCookie("user_email");
+	 		    	var userJSON = getUserData(email)
+	 		    	var i = this.getAttribute("arrayIndex")
+	 		    	var outfitJSON = userJSON["outfits"][i]
+	 		    	var name = outfitJSON["name"]
+	 		    	var url = "/outfits/" + i + "/" + name 
+	 		    	window.location.href= url;
+	 		    });
 	 		    xButton.setAttribute("aria-hidden", true)
-	 		    xLink.appendChild(xButton)
-	 		    xCell.appendChild(xLink)
+	 		    xCell.appendChild(xButton)
 	 		    
+	 		    row.setAttribute("arrayIndex", i);
 	 		    row.onclick = (function() {
 	 		    	var email = getCookie("user_email");
 	 		    	var userJSON = getUserData(email)
@@ -127,25 +120,15 @@
 	 			row.className="addOutfitBar"
 	 			
 	 			var x = row.insertCell(0)
-	 			x.style="width: 30%"
+	 			row.insertCell(1)
 	 			var nameBar = document.createElement('input');
 	 			nameBar.type="text"
 	 			nameBar.id="nameBar"
 	 			nameBar.placeholder="Name your new outfit..."
 	 			x.appendChild(nameBar)
-
-	 			var y = row.insertCell(1)
-	 			y.style="width: 0%"
-	 			y = row.insertCell(2)
-	 			y.style="width: 0%"
-	 			y = row.insertCell(3)
-	 			y.style="width: 0%"
-	 			y = row.insertCell(4)
-	 			y.style="width: 0%"
-	 			var buttonCell = row.insertCell(5)
-	 			buttonCell.style="width: 80%"
+	 			row.insertCell(2)
+	 			var buttonCell = row.insertCell(3)
 	 			var button = document.createElement('div');
-	 			button.style="width: 100%"
 	 			button.className="add_outfit_button"
 	 			button.innerHTML = "Add Outfit"
 	 			button.onclick = function(){
@@ -159,11 +142,9 @@
 		 			}
 	 			};
 	 			buttonCell.appendChild(button)
-
-	 			y = row.insertCell(6)
-	 			y.style="width: 0%"
 	 		}
 		</script>
-	</body>
+	
 
-</html>
+
+</body></html>
