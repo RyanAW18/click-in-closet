@@ -61,6 +61,7 @@
 
 	 		for (var i = 0; i < outfitArray.length; i++) {
 	 			row = table.insertRow(i)
+	 			row.setAttribute("arrayIndex", i);
 	 		    row.className="search-result"
 	 		    var nameCell = row.insertCell(0)
 	 		    nameCell.innerHTML = outfitArray[i]["name"]

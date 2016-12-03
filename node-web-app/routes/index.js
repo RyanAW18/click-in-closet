@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var async = require('async');
 var http = require('http');
+var httpReq = require('httpReq.js');
+
 
 //lets require/import the mongodb native drivers.
 var mongodb = require('mongodb');
@@ -76,34 +78,6 @@ function userFetch(account, callback, res) {
 	    // db.close();
 	  });
 
-}
-
-function getUserData(email) {
-	var pathURL = "/" + email + "/data"
-	var options = {
-        host: 'localhost',
-        port: 3000,
-        path: pathURL,
-        method: 'GET',
-        headers: {
-            accept: 'application/json'
-        }
-    };
-
-var x = http.request(options,function(res){
-    console.log("Connected");
-    res.on('data',function(data){
-        console.log(data);
-    });
-});
-x.end()
-}
-
-function getProductData(productID) {
-    var request = new request
-    var url = "/product/" + productID + "/data";
-    request.get(url)
-    return JSON.parse(request.body);
 }
 
 function createAccount(email, password, firstName, lastName, callbackSucc, callbackFail, res) {
@@ -292,21 +266,15 @@ function addOutfit(req, name) {
 	}
 }
 
-function addItemToOutfit(req, productID, index) {
+function addItemToOutfit_User(req, productID, index, callback_prod, callback_up) {
+	console.log("Add item --> user level")
+	console.log("index: " + index)
 	var cookie = req.cookies;
 	if (cookie["user_email"] == undefined) return null
 	if (cookie["user_email"].length == 0) return null
 	else {
 		var email = cookie["user_email"]
-		var userJSON = getUserData(email)
-		console.log(userJSON)
-		var outfitArray = userJSON["outfits"]
-		var outfitJSON = outfitArray[index];
-		var itemArray = outfitJSON["items"];
-		var productJSON = getProductData(productID)
-		itemArray.push(productJSON)
-		outfitArray.push(newOutfitJSON)
-		console.log("outfit length: " + outfitArray.length)
+
 		// Use connect method to connect to the Server
 		MongoClient.connect(url, function (err, db) {
 		  if (err) {
@@ -319,14 +287,18 @@ function addItemToOutfit(req, productID, index) {
 
 			 // do some work here with the database.
 		    var userDB = db.collection('userDB')
-		    userDB.update(
-		    	{'email' : email},
-		    	{
-        		"$set": {
-		            "outfits": outfitArray
-        		}
-        		}
-       		)
+		    userDB.find({'email' : email}).toArray(function(err, result) {
+		    	if (err) {
+		        	console.log(err);
+		      } else if (result.length) {
+		        	console.log("Found account" + email)
+		        	callback_prod(result[0], productID, index, callback_up, email, db)
+		      } else {
+		        	console.log('No document(s) found with defined "find" criteria!');
+		        	return 0
+		      }
+		    })
+
 		    //Close connection
 		    // db.close();
 		  });
@@ -334,6 +306,62 @@ function addItemToOutfit(req, productID, index) {
 }
 
 
+
+function addItemToOutfit_Product(userJSON, productID, index, callback, email, db) {
+	console.log("Add item --> product level")
+	console.log("Product ID: " + productID)
+	var outfitArray = userJSON["outfits"]
+	var outfitJSON = outfitArray[index];
+	console.log(outfitJSON)
+
+	var o_id = new ObjectID(productID)
+
+	var productDB = db.collection('products')
+	productDB.find({'_id' : o_id}).toArray(function(err, result) {
+	    	if (err) {
+	        	console.log(err);
+	      } else if (result.length) {
+	        	console.log('Found ' + result.length + " item(s)")
+	        	callback(result[0], outfitJSON, outfitArray, index, email, db)
+	      } else {
+	        	console.log('No document(s) found with defined "find" criteria!');
+	      }
+	    })
+
+	    //Close connection
+	    // db.close();
+}
+
+function addItemToOutfit_Update(productJSON, outfitJSON, outfitArray, index, email, db) {
+	console.log("Add item --> update level")
+	var itemArray = outfitJSON["items"];
+	itemArray.push(productJSON)
+	outfitArray[index] = outfitJSON;
+	console.log("outfit length: " + outfitArray.length)
+	// Use connect method to connect to the Server
+	MongoClient.connect(url, function (err, db) {
+	  if (err) {
+	    console.log('Unable to connect to the mongoDB server. Error:', err);
+	  } else {
+	    //HURRAY!! We are connected. :)
+	    console.log('Database connection established');
+		}
+
+
+		 // do some work here with the database.
+	    var userDB = db.collection('userDB')
+	    userDB.update(
+	    	{'email' : email},
+	    	{
+    		"$set": {
+	            "outfits": outfitArray
+    		}
+    		}
+   		)
+	    //Close connection
+	    // db.close();
+	  });
+}
 
 
 /* GET home page. */
@@ -388,10 +416,12 @@ router.get('/outfits/:index/:name', function(req, res, next) {
 
 router.get('/outfits/add_item/:productID/:index', function(req, res, next) {
 	var productID = req.params.productID
+	console.log("Product ID: " + productID)
 	var index = req.params.index
+	console.log(index)
 	var loggedIn = checkLoginStatus(req);
 	if (loggedIn) {
-		addItemToOutfit(req, productID, index)
+		addItemToOutfit_User(req, productID, index, addItemToOutfit_Product, addItemToOutfit_Update)
 		res.redirect("/outfits")
 	}
 	else res.redirect("/");
@@ -493,45 +523,3 @@ router.get('/create_account/:email/:password/:firstName/:lastName', function(req
 
 
 module.exports = router;
-
-//CODE TO HANDLE HTTP REQUEST
-
-var http = require('http');
-
-http.createServer(function(request, response) {
-  var headers = request.headers;
-  var method = request.method;
-  var url = request.url;
-  var body = [];
-  request.on('error', function(err) {
-    console.error(err);
-  }).on('data', function(chunk) {
-    body.push(chunk);
-  }).on('end', function() {
-    body = Buffer.concat(body).toString();
-    // BEGINNING OF NEW STUFF
-
-    response.on('error', function(err) {
-      console.error(err);
-    });
-
-    response.statusCode = 200;
-    response.setHeader('Content-Type', 'application/json');
-    // Note: the 2 lines above could be replaced with this next one:
-    // response.writeHead(200, {'Content-Type': 'application/json'})
-
-    var responseBody = {
-      headers: headers,
-      method: method,
-      url: url,
-      body: body
-    };
-
-    response.write(JSON.stringify(responseBody));
-    response.end();
-    // Note: the 2 lines above could be replaced with this next one:
-    // response.end(JSON.stringify(responseBody))
-
-    // END OF NEW STUFF
-  });
-}).listen(8080);
