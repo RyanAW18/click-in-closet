@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from selenium import webdriver
+import time
 import platform
 import urllib
 import urllib2
@@ -14,14 +15,22 @@ products.create_index([("name", "text"), ("brand", "text")])
 
 base_url = "http://www.urbanoutfitters.com"
 
+# urlTest = "http://www.urbanoutfitters.com/urban/catalog/productdetail.jsp?id=40468787&category=W_NEWARRIVALS"
+
+# driver = webdriver.PhantomJS()
+# driver.get(urlTest)
+# html = driver.page_source
+# soup = BeautifulSoup(html, "html.parser")
+
+
 def findBrand(soup):
   return "Urban Outfitters"
 
 def findPrice(soup):
-  price = soup.find('h1', class_="product-price")
-  priceTag = price.find('span', {"class" : "mainPrice ng-scope ng-binding"})
-  if priceTag is not None:
-    return priceTag.text.strip()
+  price = soup.find('span', {"class" : "mainPrice ng-scope ng-binding"})
+  print price
+  if price is not None:
+    return price.text.strip()
 
 def findProductName(soup):
   product = soup.find('h1', class_='ng-scope ng-isolate-scope ng-binding')
@@ -34,19 +43,23 @@ def findImageLink(soup):
     return image['content']
 
 def findDescription(soup):
-  description = soup.find('div', class_="product-description child")
-  deepDescription = description.find('div', class_="ng-binding")
-  paragraph = deepDescription.find('p')
-  if paragraph.text is not None:
-    return paragraph.text
+  description = soup.find('div', {'ng-bind-html' : 'product.product.longDescription'})
+  if description.text is not None:
+    return description.text
 
 def postProduct(url):
-	html = urllib.urlopen(url).read()
-	soup = BeautifulSoup(html, "html.parser")
-	product = {'brand': findBrand(soup), 'name': findProductName(soup), 'price': findPrice(soup), 'image': findImageLink(soup), 'description': findDescription(soup), 'url': url}
-	products.insert(product)
+  driver.get(url)
+  html = driver.page_source
+  soup = BeautifulSoup(html, "html.parser")
+  product = {'brand': findBrand(soup), 'name': findProductName(soup), 'price': findPrice(soup), 'image': findImageLink(soup), 'description': findDescription(soup), 'url': url}
+  # products.insert(product)
 
 
+# print findBrand(soup)
+# print findPrice(soup)
+# print findProductName(soup)
+# print findImageLink(soup)
+# print findDescription(soup)
 
 totalLinks = []
 j = 0
@@ -81,17 +94,18 @@ catalog_base_url = "http://www.urbanoutfitters.com/urban/catalog/"
 nextPage_url = "http://www.urbanoutfitters.com/urban/catalog/category.jsp"
 nullLink = False
 
-testUrl = "http://www.urbanoutfitters.com/urban/catalog/category.jsp?id=W_APP_DRESSES&cm_sp=WOMENS-_-L2-_-WOMENS:W_APP_DRESSES"
 
 for link in totalLinks:
-  print link
+  print "category link: " + link
+  # creation of new driver
   driver.get(link)
   html = driver.page_source
   soup = BeautifulSoup(html, "html.parser")
-  while len(soup.select("div.media a")) != 0:
-    for a in soup.select("div.media a"):
+  while len(soup.select("p.product-image a")) != 0:
+    for a in soup.select("p.product-image a"):
       j = j + 1
       productUrl = catalog_base_url + a["href"]
+      print "product url: " + productUrl
       postProduct(productUrl)
     pageHtml = soup.findAll("div", class_= "pagination")
     for div in pageHtml:
@@ -107,9 +121,13 @@ for link in totalLinks:
     pageUrl = nextPage_url + pageUrl
     print j
     print "new page link: " + pageUrl
+    # creation of new driver
+    driver = webdriver.PhantomJS()
     driver.get(pageUrl)
     html = driver.page_source
     soup = BeautifulSoup(html, "html.parser")
 
 print j
 print "done"
+
+
