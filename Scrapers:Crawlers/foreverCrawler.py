@@ -7,7 +7,7 @@ import json
 from pymongo import MongoClient
 client = MongoClient('mongodb://trossi:1460@ds143707.mlab.com:43707/heroku_b37frt6h')
 db = client.heroku_b37frt6h
-products = db.products
+products = db.productsMen
 products.create_index([("name", "text"), ("brand", "text")])
 
 def findBrand(soup):
@@ -63,8 +63,7 @@ def postProduct(url, category):
   'description': description, 'url': url, 'category' : category, 'key terms' : findKeyWords(description, name, brand), 
   'rec shirts' : [], 'rec pants' : [], 'rec shoes' : [], 'rec outer' : []}
   key = {'description' : description}
-  # products.update_one(key, {'$set' : product}, upsert=True)
-  print product
+  products.update_one(key, {'$set' : product}, upsert=True)
 
 
 

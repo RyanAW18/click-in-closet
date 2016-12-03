@@ -24,9 +24,15 @@ def findPrice(soup):
 
 def findProductName(soup):
   product = soup.find('div', {'itemprop' : 'name'})
-  productName = product.find('h1')
   if product is not None:
-    return product.text
+    productName = product.find('h1')
+    if productName is not None:
+      return productName.text
+  else:
+    product = soup.find('font', {'itemprop' : 'name'})
+    productName = product.find('h1')
+    return productName.text
+
 
 def findImageLink(soup):
   image = soup.find('meta', {"property" : "og:image"})
@@ -35,6 +41,15 @@ def findImageLink(soup):
 
 def findDescription(soup):
   description = soup.find('span', {"itemprop" : "description"})
+  if description is not None:
+    return description.text
+  else:
+    description = soup.find('div', {"itemprop" : "description"})
+  if description is not None:
+    return description.text
+  else:
+   description = soup.find('div', class_="detail")
+   description = description.find("h3").findNextSibling()
   if description is not None:
     return description.text
 
@@ -48,9 +63,11 @@ def findKeyWords(description, name, brand):
   return keyTerms
 
 def postProduct(url, category):
+  print "url: " + url
   html = urllib.urlopen(url).read()
   soup = BeautifulSoup(html, "html.parser")
   name = findProductName(soup)
+  print "name: " + name
   description = findDescription(soup)
   brand = findBrand(soup)
   nameTerms = name.split(' ')
@@ -62,6 +79,12 @@ def postProduct(url, category):
   'rec shirts' : [], 'rec pants' : [], 'rec shoes' : [], 'rec outer' : []}
   key = {'description' : description}
   products.update_one(key, {'$set' : product}, upsert=True)
+
+
+# testurl = 'http://www.ralphlauren.com/product/index.jsp?productId=87370086'
+# html = urllib.urlopen(testurl).read()
+# soup = BeautifulSoup(html, "html.parser")
+# print "description: " + findDescription(soup)
 
 
 apparelCategories = {}
@@ -106,14 +129,14 @@ print "got shoes"
 
 
 apparelCategoryMap = {'Polo Shirts' : 'Shirts', 'T-Shirts & Sweatshirts' : 'Shirts', 'Casual Shirts' : 'Shirts', 'Sweaters' : 'Jackets, Sweaters, & Outerwear', 
-'Pants & Jeans' : 'Pants & Shorts', 'Dress Shirts' : 'Shirts', 'Suits, Sport Coats & Trousers' : 'Jackets, Sweaters, & Outerwear', 
+'Jackets & Outerwear' : 'Jackets, Sweaters, & Outerwear', 'Pants & Jeans' : 'Pants & Shorts', 'Dress Shirts' : 'Shirts', 'Suits, Sport Coats & Trousers' : 'Jackets, Sweaters, & Outerwear', 
 'Shorts & Swim' : 'Pants & Shorts', 'Underwear & Sleepwear' : 'Other'}
 
 exceptionList = {'Hoodie' : 'Jackets, Sweaters, & Outerwear', 'Jacket' : 'Jackets, Sweaters, & Outerwear', 'Sweater': 'Jackets, Sweaters, & Outerwear', 
 'Pullover' : 'Jackets, Sweaters, & Outerwear', 'Swim' : 'Other', 'Trunk' : 'Other', 'Trouser' : 'Pants & Shorts', 'Suits' : 'Other'}
 
 commonWords = ['the', 'in', 'and', 'with', 'for', 'on', 'this', 'that', 'an', 'it', 'anything', 'to', 'a', 'its', 'these', 'give', 'gives', 
-'look', 'looks', 'like', 'of', 'any', 'but', 'where', 'when', 'wear', 'made', 'thanks', 'you', 'yours', 'your', 'is', 'as', 'just', 'from', 'our']
+'look', 'looks', 'like', 'of', 'any', 'but', 'where', 'when', 'wear', 'made', 'thanks', 'you', 'yours', 'your', 'is', 'as', 'just', 'from', 'our', 'at']
 
 titleWords = []
 
@@ -126,33 +149,33 @@ print 'Starting'
 
 j = 0
 
-for key in apparelCategories:
-  category = apparelCategoryMap[key]
-  categoryLink = apparelCategories[key]
-  new_url = base_url + categoryLink
-  html = requests.get(new_url)
-  soup = BeautifulSoup(html.text, "html.parser")
-  while len(soup.select("div.product-photo a")) != 0:
-    for a in soup.select("div.product-photo a"):
-      j = j + 1
-      productUrl = base_url + a["href"]
-      postProduct(productUrl, category)
-    pageHtml = soup.find("div", id= "pagination")
-    for div in pageHtml:
-      links = div.findAll('a')
-      nullLink = div.find('span', class_='next-page-disabled')
-      for link in links:
-        if nullLink is not None:
-          break
-        pageUrl = link['href']
-    if nullLink is not None:
-      break
-    pageUrl = pageUrl.replace("..", "")
-    pageUrl = base_url + pageUrl
-    html = requests.get(pageUrl)
-    soup = BeautifulSoup(html.text, "html.parser")
+# for key in apparelCategories:
+#   category = apparelCategoryMap[key]
+#   categoryLink = apparelCategories[key]
+#   new_url = base_url + categoryLink
+#   html = requests.get(new_url)
+#   soup = BeautifulSoup(html.text, "html.parser")
+#   while len(soup.select("div.product-photo a")) != 0:
+#     for a in soup.select("div.product-photo a"):
+#       j = j + 1
+#       productUrl = base_url + a["href"]
+#       postProduct(productUrl, category)
+#     pageHtml = soup.find("div", id= "pagination")
+#     for div in pageHtml:
+#       links = div.findAll('a')
+#       nullLink = div.find('span', class_='next-page-disabled')
+#       for link in links:
+#         if nullLink is not None:
+#           break
+#         pageUrl = link['href']
+#     if nullLink is not None:
+#       break
+#     pageUrl = pageUrl.replace("..", "")
+#     pageUrl = base_url + pageUrl
+#     html = requests.get(pageUrl)
+#     soup = BeautifulSoup(html.text, "html.parser")
 
-print "apparel total: " +  j
+# print "apparel total: " + str(j)
 
 k = 0
 
@@ -180,7 +203,7 @@ for link in accessoryLinks:
     html = requests.get(pageUrl)
     soup = BeautifulSoup(html.text, "html.parser")
 
-print "accessory total: " +  k
+print "accessory total: " +  str(k)
 
 
 
@@ -209,6 +232,8 @@ while len(soup.select("div.product-photo a")) != 0:
   html = requests.get(pageUrl)
   soup = BeautifulSoup(html.text, "html.parser")
 
-print "shoe total: " + m
+print "shoe total: " + str(m)
 
-print "done, product total : " + (j + k + m)
+tot = j + k + m
+
+print "done, product total : " + str(tot)

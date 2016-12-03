@@ -29,7 +29,7 @@ function productFetch(id, callback, res) {
 
 
 		 // do some work here with the database.
-	    var products = db.collection('products')
+	    var products = db.collection('productsMen')
 	    products.find({'_id' : o_id}).toArray(function(err, result) {
 	    	if (err) {
 	        	console.log(err);
@@ -133,7 +133,7 @@ function dbSearch(query, callback, res) {
 
 
 		 // do some work here with the database.
-	    var products = db.collection('products')
+	    var products = db.collection('productsMen')
 	    var queries = products.find( {$text: {$search: query}}).toArray(function(err, result) {
 	    	if (err) {
 	        	console.log(err);
@@ -316,7 +316,7 @@ function addItemToOutfit_Product(userJSON, productID, index, callback, email, db
 
 	var o_id = new ObjectID(productID)
 
-	var productDB = db.collection('products')
+	var productDB = db.collection('productsMen')
 	productDB.find({'_id' : o_id}).toArray(function(err, result) {
 	    	if (err) {
 	        	console.log(err);
