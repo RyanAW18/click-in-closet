@@ -363,6 +363,11 @@ function addItemToOutfit_Product(userJSON, productID, index, callback, email, db
 function addItemToOutfit_Update(productJSON, outfitJSON, outfitArray, index, email, db) {
 	console.log("Add item --> update level")
 	var itemArray = outfitJSON["items"];
+	var category = productJSON["category"]
+	for (var i = 0; i < itemArray.length; i++) {
+		var item = itemArray[i]
+		if (item["category"] == category && category != "Other") return null
+	}
 	itemArray.push(productJSON)
 	var price = updateOutfitPrice(itemArray)
 	outfitJSON["price"] = price
@@ -376,7 +381,6 @@ function addItemToOutfit_Update(productJSON, outfitJSON, outfitArray, index, ema
 	    //HURRAY!! We are connected. :)
 	    console.log('Database connection established');
 		}
-
 
 		 // do some work here with the database.
 	    var userDB = db.collection('userDB')
@@ -600,9 +604,9 @@ router.get('/outfits/add_item/:productID/:index/:name', function(req, res, next)
 	var loggedIn = checkLoginStatus(req);
 	if (loggedIn) {
 		var ret = addItemToOutfit_User(req, productID, index, addItemToOutfit_Product, addItemToOutfit_Update)
-		if (ret == null) {
-			res.redirect("/outfits#")
-		}
+		// if (ret == null) {
+		// 	res.redirect("/outfits#")
+		// }
 		var url = "/outfits/" + index + "/" + name
 		res.redirect(url)
 	}

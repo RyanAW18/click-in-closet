@@ -68,7 +68,7 @@ a:hover {
 	font-size: 17px;
 	color: white;
 	border-radius: 100%;
-	transition: all .15s ease-in-out;
+	transition: all .2s ease-in-out;
 	border: 1px solid white;
 	background-color: #606060;
 	width: 25px;
@@ -77,8 +77,10 @@ a:hover {
 }
 
 .home_account-icon:hover {
-	transform: scale(1.2);
-	transition: .15s ease-in-out;
+	color: #606060;
+	background-color: white;
+	border-color: #606060;
+	transition: .2s ease-in-out;
 }
 
 .account-icon {
@@ -371,6 +373,41 @@ a:hover {
 	background-color: white; 
 	color:#724800 ;
 	border-color: #724800;
+}
+
+.item-rec-row {
+}
+
+.item-rec {
+	text-align: center;
+	vertical-align: middle;
+}
+
+.item-rec-img {
+	transition: all .2s ease-in-out;
+	border-radius: 5%;
+	width: 50%;
+}
+
+.item-rec-img:hover {
+	transition: all .2s ease-in-out;
+	-webkit-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+	transform: scale(1.1);
+}
+
+.item-rec-name {
+	margin-top: 5%;
+}
+
+#rec-header {
+	margin-left: 3%;
+	margin-top: 5%;
+	padding-bottom: 5%;
+}
+
+#sim-rec {
+	margin-top: 3%;
 }
 
 

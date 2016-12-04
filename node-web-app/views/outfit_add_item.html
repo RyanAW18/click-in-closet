@@ -65,16 +65,23 @@
 	 		    row.className="search-result"
 	 		    var nameCell = row.insertCell(0)
 	 		    nameCell.innerHTML = outfitArray[i]["name"]
-	 		    nameCell.style="vertical-align: middle; width: 25%"
+	 		    nameCell.style="vertical-align: middle; width: 17%"
+
+	 		    var numCell = row.insertCell(1)
+	 		    numCell.innerHTML = outfitArray[i]["items"].length + " item(s)"
+	 		    numCell.style="vertical-align: middle; width: 17%"
+
+
 	 		    var outfitJSON = outfitArray[i]
 	 		    var items = outfitJSON["items"]
-	 		    var j = 0;
-	 		    for (; j < 3; j++) {
+	 		    var j = 1;
+	 		    for (var j = 1; j < 4; j++) {
 	 		    	var itemCell = row.insertCell(j + 1)
-	 		    	itemCell.style="width: 25%"
-	 		    	if (j < items.length) {
+	 		    	itemCell.style="width: 17%"
+	 		    	var k = j - 1;
+	 		    	if (k < items.length) {
 	 		    		var img = document.createElement('img');
-		 		    	img.src = items[j]["image"]
+		 		    	img.src = items[k]["image"]
 		 		    	img.style="width: 50%; margin-left: 30%"
 		 		    	itemCell.appendChild(img)
 
@@ -82,7 +89,7 @@
 	 		    }
 	 		    var priceCell = row.insertCell(j+1)
 	 		    priceCell.innerHTML=outfitJSON["price"]
-	 		    priceCell.style="vertical-align: middle; width: 25%"
+	 		    priceCell.style="vertical-align: middle; width: 15%"
 	 		    row.onclick = (function() {
 	 		    	var email = getCookie("user_email");
 					var userJSON = getUserData(email)

@@ -47,12 +47,86 @@
 		  		<h1 id="product_title"></h1>
 		  		<a class="product_link"><img id="brand_pic" class="brand_pic" width="50%"/></a>
 		  		<h2 id="product_price"></h2>
+		  		<h3 id="product-category">Category: CAT</h3>
 		  		<h3>Details</h3>
 		  			<p id="product_description"></p>
 
 		  		<center><button type="submit" class="btn btn-default" id="product_add_btn" onclick="addItemToOutfit()">Add to Outfit</button></center>
 			</div>
 			<div class="col-md-1 col-lg-1"></div>
+		</div>
+		<div class="row item-rec-row" id="sim-rec">
+				<div class="col-sm-3 col-md-3 col-lg-3 item-rec">
+					<h3>Similar Items:</h2>
+				</div>
+				<div class="col-sm-3 col-md-3 col-lg-3 item-rec">
+					<a class="item-rec-link sim" href=""><img class="item-rec-img sim" src=""/></a>
+					<p class="item-rec-name sim">Name</p>
+				</div>
+				<div class="col-sm-3 col-md-3 col-lg-3 item-rec">
+					<a class="item-rec-link sim" href=""><img class="item-rec-img sim" src=""/></a>
+					<p class="item-rec-name sim">Name</p>
+				</div>
+				<div class="col-sm-3 col-md-3 col-lg-3 item-rec">
+					<a class="item-rec-link sim" href=""><img class="item-rec-img sim" src=""/></a>
+					<p class="item-rec-name sim">Name</p>
+				</div>
+			</div>
+		<h2 id="rec-header">Outfit Recommendations</h2>
+		<div id="recommendations">
+			<div class="row item-rec-row sim-rec">
+				<div class="col-sm-3 col-md-3 col-lg-3 item-rec">
+					<h3 class="cat-rec">Outfit Recommendation - CAT:</h2>
+				</div>
+				<div class="col-sm-3 col-md-3 col-lg-3 item-rec">
+					<a class="item-rec-link cat1" href=""><img class="item-rec-img cat1" src=""/></a>
+					<p class="item-rec-name cat1">Name</p>
+				</div>
+				<div class="col-sm-3 col-md-3 col-lg-3 item-rec">
+					<a class="item-rec-link cat1" href=""><img class="item-rec-img cat1" src=""/></a>
+					<p class="item-rec-name cat1">Name</p>
+				</div>
+				<div class="col-sm-3 col-md-3 col-lg-3 item-rec">
+					<a class="item-rec-link cat1" href=""><img class="item-rec-img cat1" src=""/></a>
+					<p class="item-rec-name cat1">Name</p>
+				</div>
+			</div>
+
+			<div class="row item-rec-row sim-rec">
+				<div class="col-sm-3 col-md-3 col-lg-3 item-rec">
+					<h3 class="cat-rec">Outfit Recommendation - CAT:</h2>
+				</div>
+				<div class="col-sm-3 col-md-3 col-lg-3 item-rec">
+					<a class="item-rec-link cat2" href=""><img class="item-rec-img cat2" src=""/></a>
+					<p class="item-rec-name cat2">Name</p>
+				</div>
+				<div class="col-sm-3 col-md-3 col-lg-3 item-rec">
+					<a class="item-rec-link cat2" href=""><img class="item-rec-img cat2" src=""/></a>
+					<p class="item-rec-name cat2">Name</p>
+				</div>
+				<div class="col-sm-3 col-md-3 col-lg-3 item-rec">
+					<a class="item-rec-link cat2" href=""><img class="item-rec-img cat2" src=""/></a>
+					<p class="item-rec-name cat2">Name</p>
+				</div>
+			</div>
+
+			<div class="row item-rec-row">
+				<div class="col-sm-3 col-md-3 col-lg-3 item-rec">
+					<h3 class="cat-rec">Outfit Recommendation - CAT:</h2>
+				</div>
+				<div class="col-sm-3 col-md-3 col-lg-3 item-rec">
+					<a class="item-rec-link cat3" href=""><img class="item-rec-img cat3" src=""/></a>
+					<p class="item-rec-name cat3">Name</p>
+				</div>
+				<div class="col-sm-3 col-md-3 col-lg-3 item-rec">
+					<a class="item-rec-link cat3" href=""><img class="item-rec-img cat3" src=""/></a>
+					<p class="item-rec-name cat3">Name</p>
+				</div>
+				<div class="col-sm-3 col-md-3 col-lg-3 item-rec">
+					<a class="item-rec-link cat3" href=""><img class="item-rec-img cat3" src=""/></a>
+					<p class="item-rec-name cat3">Name</p>
+				</div>
+			</div>
 		</div>
 		 <script type="text/javascript" src="/javascripts/common.js"></script>
 		<script type="text/javascript">
@@ -66,6 +140,7 @@
 			var dataJSON = getProductData(productID)
 			document.getElementById("page-title").innerHTML = dataJSON["brand"] + " - " + dataJSON["name"]
 			document.getElementById("product_title").innerHTML = dataJSON["name"]
+			document.getElementById("product-category").innerHTML = "Category: " + dataJSON["category"]
 			document.getElementById("product_pic").src = dataJSON["image"]
 			document.getElementById("product_price").innerHTML = dataJSON["price"]
 			document.getElementById("product_description").innerHTML = dataJSON["description"]
@@ -81,6 +156,86 @@
 				var url = "/outfits/add_item/" + productID
 				window.location.href = url;
 			}
+
+			var prodCategory = dataJSON["category"]
+			if (prodCategory == "Other" || dataJSON["rec shoes"].length == 0 || dataJSON["rec shirts"].length == 0 || 
+				dataJSON["rec pants"].length == 0 || dataJSON["rec outer"].length == 0) {
+				document.getElementById("recommendations").style="display: none;"
+				document.getElementById("rec-header").innerHTML = "Sorry! No recommendations for this item"
+				document.getElementById("sim-rec").style="display: none;"
+
+			}
+			else {
+				var categories = ["Shirts", "Pants & Shorts", "Jackets, Sweaters, & Outerwear", "Shoes & Other Footwear"]
+				var categMap = {"Shirts" : "rec shirts", "Pants & Shorts" : "rec pants", "Jackets, Sweaters, & Outerwear" : "rec outer", "Shoes & Other Footwear" : "rec shoes"}
+				var index = categories.indexOf(prodCategory)
+				categories.splice(index, 1)
+				var recHeaders = document.getElementsByClassName("cat-rec")
+				for (var i = 0; i < recHeaders.length; i++) {
+					recHeaders[i].innerHTML = categories[i]
+				}
+
+				var categVal = categMap[prodCategory];
+
+				var simImages = document.getElementsByClassName("item-rec-img sim")
+				var simNames = document.getElementsByClassName("item-rec-name sim")
+				var simLinks = document.getElementsByClassName("item-rec-link sim")
+
+				for (i = 0; i < simImages.length; i++) {
+					var recID = dataJSON[categVal][i]
+					productJSON = getProductData(recID)
+					simImages[i].src = productJSON["image"]
+					simNames[i].innerHTML = productJSON["name"]
+					var url = "/product/" + productJSON["_id"]
+					simLinks[i].href = url
+				}
+
+				var j = 0;
+
+				var cat_1_Images = document.getElementsByClassName("item-rec-img cat1")
+				var cat_1_Names = document.getElementsByClassName("item-rec-name cat1")
+				var cat_1_links = document.getElementsByClassName("item-rec-link cat1")
+				for (i = 0; i < cat_1_Images.length; i++) {
+					var recID = dataJSON[categMap[categories[j]]][i]
+					productJSON = getProductData(recID)
+					cat_1_Images[i].src = productJSON["image"]
+					cat_1_Names[i].innerHTML = productJSON["name"]
+					url = "/product/" + productJSON["_id"]
+					cat_1_links[i].href = url
+				}
+				j++
+
+				var cat_2_Images = document.getElementsByClassName("item-rec-img cat2")
+				var cat_2_Names = document.getElementsByClassName("item-rec-name cat2")
+				var cat_2_links = document.getElementsByClassName("item-rec-link cat2")
+				for (i = 0; i < cat_2_Images.length; i++) {
+					var recID = dataJSON[categMap[categories[j]]][i]
+					productJSON = getProductData(recID)
+					cat_2_Images[i].src = productJSON["image"]
+					cat_2_Names[i].innerHTML = productJSON["name"]
+					url = "/product/" + productJSON["_id"]
+					cat_2_links[i].href = url
+				}
+				j++
+
+				var cat_3_Images = document.getElementsByClassName("item-rec-img cat3")
+				var cat_3_Names = document.getElementsByClassName("item-rec-name cat3")
+				var cat_3_links = document.getElementsByClassName("item-rec-link cat3")
+				for (i = 0; i < cat_3_Images.length; i++) {
+					var recID = dataJSON[categMap[categories[j]]][i]
+					productJSON = getProductData(recID)
+					cat_3_Images[i].src = productJSON["image"]
+					cat_3_Names[i].innerHTML = productJSON["name"]
+					url = "/product/" + productJSON["_id"]
+					cat_3_links[i].href = url
+				}
+
+
+			}
+
+
+			
+
 			
 
 
