@@ -9,12 +9,12 @@ import commonwords
 from pymongo import MongoClient
 client = MongoClient('mongodb://trossi:1460@ds143707.mlab.com:43707/heroku_b37frt6h')
 db = client.heroku_b37frt6h
-products = db.products
+products = db.productsMen
 products.create_index([("name", "text"), ("brand", "text")])
 
 base_url = "http://www.jcrew.com"
 
-urlTest = "https://www.jcrew.com/mens_category/socks/brandedsocks/PRDOVR~F6664/F6664.jsp"
+urlTest = "https://www.jcrew.com/mens_category/dressshirts/cordings/PRDOVR~E2464/E2464.jsp"
 # html = requests.get(urlTest)
 # soup = BeautifulSoup(html.text, "html.parser")
 
@@ -69,17 +69,17 @@ def postProduct(url, category):
   brand = findBrand(soup)
   name = findProductName(soup)
   if name is None:
-    print "FAIL!!!!!!!!!!"
-    return
+    print "NAME FAIL!!!!!!!!!!"
+    return 1
   print "name: " + name
   price = findPrice(soup)
   if price is None:
-    print "FAIL!!!!!!!!!!"
-    return
+    print "PRICE FAIL!!!!!!!!!!"
+    return 1
   image = findImageLink(soup)
   if image is None:
-    print "FAIL!!!!!!!!!!"
-    return
+    print "IMAGE FAIL!!!!!!!!!!"
+    return 1
   description = findDescription(soup)
   # if description is None:
   #   return
@@ -101,7 +101,8 @@ def postProduct(url, category):
 # soup = BeautifulSoup(html, "html.parser")
 
 
-# print findPrice(soup)
+# ret = postProduct(urlTest, "Shirts")
+# print "done"
 
 
 
@@ -172,25 +173,32 @@ commonWords = commonwords.getCommonWords()
 
 
 print 'Starting'
+failCount = 0
 
 j = 0
 
 for key in apparelCategories:
-  print key
+  print "category: " + key
   category = apparelCategoryMap[key]
   categoryLink = apparelCategories[key]
+  previousLink = categoryLink
   # new_url = base_url + categoryLink
   driver.get(categoryLink)
   html = driver.page_source
   soup = BeautifulSoup(html, "html.parser")
   while len(soup.select("a.product-image-wrap")) != 0:
-    print "in while loop"
     for a in soup.select("a.product-image-wrap"):
       j = j + 1
       productUrl = a["href"]
-      postProduct(productUrl, category)
+      ret = postProduct(productUrl, category)
+      if ret is not None:
+        failCount = failCount + ret
+        print "fail: " + str(failCount)
+        print "total: " + str(j)
     pageHtml = soup.find("div", class_= "paginationTop")
-    if pageHtml is not None:
+    if pageHtml is None:
+      break
+    else:
       nextLink = pageHtml.find('li', class_= 'pageNext')
       nullLink = nextLink.find('span', class_='disabled')
       if nullLink is not None:
@@ -198,6 +206,9 @@ for key in apparelCategories:
         break
       hyperlink = nextLink.find('a')["href"]
     pageUrl = categoryLink + hyperlink
+    if pageUrl == previousLink:
+      break
+    previousLink = pageUrl
     driver.get(pageUrl)
     html = driver.page_source
     soup = BeautifulSoup(html, "html.parser")
@@ -208,25 +219,31 @@ print "apparel total: " + str(j)
 k = 0
 
 for link in accessoryLinks:
-  print link
+  print "category: " + link
   category = "Other"
   # new_url = base_url + categoryLink
   driver.get(link)
   html = driver.page_source
   soup = BeautifulSoup(html, "html.parser")
   while len(soup.select("a.product-image-wrap")) != 0:
-    print "in while loop"
     for a in soup.select("a.product-image-wrap"):
       k = k + 1
       productUrl = a["href"]
-      postProduct(productUrl, category)
+      ret = postProduct(productUrl, category)
+      if ret is not None:
+        failCount = failCount + ret
+        print "fail: " + str(failCount)
+        print "total: " + str(k)
     pageHtml = soup.find("div", class_= "paginationTop")
-    if pageHtml is not None:
+    if pageHtml is None:
+      break
+    else:
       nextLink = pageHtml.find('li', class_= 'pageNext')
       nullLink = nextLink.find('span', class_='disabled')
       if nullLink is not None:
         print "no next page"
         break
+      hyperLink = ""
       hyperlink = nextLink.find('a')["href"]
     pageUrl = link + hyperlink
     driver.get(pageUrl)
@@ -244,18 +261,24 @@ driver.get(shoesLink)
 html = driver.page_source
 soup = BeautifulSoup(html, "html.parser")
 while len(soup.select("a.product-image-wrap")) != 0:
-  print "in while loop"
   for a in soup.select("a.product-image-wrap"):
     m = m + 1
     productUrl = a["href"]
-    postProduct(productUrl, category)
+    ret = postProduct(productUrl, category)
+    if ret is not None:
+      failCount = failCount + ret
+      print "fail: " + str(failCount)
+      print "total: " + str(m)
   pageHtml = soup.find("div", class_= "paginationTop")
-  if pageHtml is not None:
+  if pageHtml is None:
+      break
+  else:
     nextLink = pageHtml.find('li', class_= 'pageNext')
     nullLink = nextLink.find('span', class_='disabled')
     if nullLink is not None:
       print "no next page"
       break
+    hyperLink = ""
     hyperlink = nextLink.find('a')["href"]
   pageUrl = shoesLink + hyperlink
   driver.get(pageUrl)
