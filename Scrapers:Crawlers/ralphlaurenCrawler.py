@@ -3,6 +3,7 @@ import urllib
 import urllib2
 import requests
 import json
+import commonwords
 
 from pymongo import MongoClient
 client = MongoClient('mongodb://trossi:1460@ds143707.mlab.com:43707/heroku_b37frt6h')
@@ -133,49 +134,41 @@ apparelCategoryMap = {'Polo Shirts' : 'Shirts', 'T-Shirts & Sweatshirts' : 'Shir
 'Shorts & Swim' : 'Pants & Shorts', 'Underwear & Sleepwear' : 'Other'}
 
 exceptionList = {'Hoodie' : 'Jackets, Sweaters, & Outerwear', 'Jacket' : 'Jackets, Sweaters, & Outerwear', 'Sweater': 'Jackets, Sweaters, & Outerwear', 
-'Pullover' : 'Jackets, Sweaters, & Outerwear', 'Swim' : 'Other', 'Trunk' : 'Other', 'Trouser' : 'Pants & Shorts', 'Suits' : 'Other'}
+'Pullover' : 'Jackets, Sweaters, & Outerwear', 'Swim' : 'Other', 'Trunk' : 'Other', 'Trouser' : 'Pants & Shorts', 'Suits' : 'Other', 'Sock' : 'Other'}
 
-commonWords = ['the', 'in', 'and', 'with', 'for', 'on', 'this', 'that', 'an', 'it', 'anything', 'to', 'a', 'its', 'these', 'give', 'gives', 
-'look', 'looks', 'like', 'of', 'any', 'but', 'where', 'when', 'wear', 'made', 'thanks', 'you', 'yours', 'your', 'is', 'as', 'just', 'from', 'our', 'at']
-
-titleWords = []
-
-for word in commonWords:
-  titleWords.append(word.title())
-
-commonWords = commonWords + titleWords
+commonWords = commonwords.getCommonWords()
 
 print 'Starting'
 
 j = 0
 
-# for key in apparelCategories:
-#   category = apparelCategoryMap[key]
-#   categoryLink = apparelCategories[key]
-#   new_url = base_url + categoryLink
-#   html = requests.get(new_url)
-#   soup = BeautifulSoup(html.text, "html.parser")
-#   while len(soup.select("div.product-photo a")) != 0:
-#     for a in soup.select("div.product-photo a"):
-#       j = j + 1
-#       productUrl = base_url + a["href"]
-#       postProduct(productUrl, category)
-#     pageHtml = soup.find("div", id= "pagination")
-#     for div in pageHtml:
-#       links = div.findAll('a')
-#       nullLink = div.find('span', class_='next-page-disabled')
-#       for link in links:
-#         if nullLink is not None:
-#           break
-#         pageUrl = link['href']
-#     if nullLink is not None:
-#       break
-#     pageUrl = pageUrl.replace("..", "")
-#     pageUrl = base_url + pageUrl
-#     html = requests.get(pageUrl)
-#     soup = BeautifulSoup(html.text, "html.parser")
+for key in apparelCategories:
+  category = apparelCategoryMap[key]
+  categoryLink = apparelCategories[key]
+  new_url = base_url + categoryLink
+  html = requests.get(new_url)
+  soup = BeautifulSoup(html.text, "html.parser")
+  while len(soup.select("div.product-photo a")) != 0:
+    for a in soup.select("div.product-photo a"):
+      j = j + 1
+      productUrl = base_url + a["href"]
+      postProduct(productUrl, category)
+    pageHtml = soup.find("div", id= "pagination")
+    for div in pageHtml:
+      links = div.findAll('a')
+      nullLink = div.find('span', class_='next-page-disabled')
+      for link in links:
+        if nullLink is not None:
+          break
+        pageUrl = link['href']
+    if nullLink is not None:
+      break
+    pageUrl = pageUrl.replace("..", "")
+    pageUrl = base_url + pageUrl
+    html = requests.get(pageUrl)
+    soup = BeautifulSoup(html.text, "html.parser")
 
-# print "apparel total: " + str(j)
+print "apparel total: " + str(j)
 
 k = 0
 

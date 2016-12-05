@@ -3,6 +3,7 @@ import urllib
 import urllib2
 import requests
 import json
+import commonwords
 
 from pymongo import MongoClient
 client = MongoClient('mongodb://trossi:1460@ds143707.mlab.com:43707/heroku_b37frt6h')
@@ -78,15 +79,7 @@ exceptionList = {'Tank' : 'Shirts','T-Shirt' : 'Shirts','Tee' : 'Shirts', 'Jeans
 'Pullover' : 'Jackets, Sweaters, & Outerwear', 'Kimono' : 'Jackets, Sweaters, & Outerwear', 'Sweatpants' : 'Pants & Shorts', 'Jersey' : 'Shirts', 'Jean' : 'Pants & Shorts', 'Pant' : 'Pants & Shorts', 
 'Anorak' : 'Jackets, Sweaters, & Outerwear', 'Pancho' : 'Jackets, Sweaters, & Outerwear', 'Bomber' : 'Jackets, Sweaters, & Outerwear', 'Windbreaker' : 'Jackets, Sweaters, & Outerwear', 'Shorts' : 'Pants & Shorts'}
 
-commonWords = ['the', 'in', 'and', 'with', 'for', 'on', 'this', 'that', 'an', 'it', 'anything', 'to', 'a', 'its', 'these', 'give', 'gives', 
-'look', 'looks', 'like', 'of', 'any', 'but', 'where', 'when', 'wear', 'made', 'thanks', 'you', 'yours', 'your', 'is', 'as', 'just', 'from', 'our', 'at']
-
-titleWords = []
-
-for word in commonWords:
-  titleWords.append(word.title())
-
-commonWords = commonWords + titleWords
+commonWords = commonwords.getCommonWords()
 
 
 params = {"action": "getcategory",
