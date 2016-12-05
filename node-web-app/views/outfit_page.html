@@ -133,6 +133,7 @@
 			for (var i = 0; i < items.length; i++) {
 				itemPics[i].src=items[i]["image"]
 				itemNames[i].innerHTML=items[i]["name"]
+				itemNames[i].setAttribute("index", i)
 				itemPrices[i].innerHTML=items[i]["price"]
 				var imgLink = "/images/" + items[i]["brand"] + ".png"
 				itemBrands[i].src=imgLink
@@ -140,14 +141,17 @@
 				pictureLinks[i].href=productLink
 				nameLinks[i].href=productLink
 				removeButtons[i].style = "display: block"
-				removeButtons[i].onclick = (function(i) {
+				removeButtons[i].setAttribute("index", i)
+				removeButtons[i].onclick = (function() {
+					var index = this.getAttribute("index")
 					var email = getCookie("user_email");
 					var outfitIndex = getQueryVariable(2)
 					var userJSON = getUserData(email)
 					var outfitJSON = userJSON["outfits"][outfitIndex]
 					var name = outfitJSON["name"]
-	 		    	var url = "/outfits/delete_item/" + outfitIndex + "/" + name + "/" + i
+	 		    	var url = "/outfits/delete_item/" + outfitIndex + "/" + name + "/" + index
 	 		    	window.location.href= url;
+	 		    	console.log(index)
 				});
 
 			}

@@ -74,7 +74,7 @@ noPage = ["mens-jackets-and-coats", "mens-bottom", "mens-shoes"]
 categoryMap = {'mens-tops' : 'Shirts', 'mens-tees-tanks-graphic' : 'Shirts', 'mens-bottom' : 'Pants & Shorts', 'mens-jackets-and-coats' : 'Jackets, Sweaters, & Outerwear', 
 'mens-accessories' : 'Other', 'mens-shoes' : 'Shoes & Other Footwear', 'branded-shop-men' : 'Other'}
 
-exceptionList = {'Tank' : 'Shirts','T-Shirt' : 'Shirts','Tee' : 'Shirts', 'Jeans' : 'Pants & Shorts', 'Sweatshirt' : 'Shirt', 'Joggers' : 'Pants & Shorts', 'Jogger' : 'Pants & Shorts','Hoodie' : 'Jackets, Sweaters, & Outerwear', 'Jacket' : 'Jackets, Sweaters, & Outerwear', 'Shirt': 'Shirts', 
+exceptionList = {'Tank' : 'Shirts','T-Shirt' : 'Shirts','Tee' : 'Shirts', 'Jeans' : 'Pants & Shorts', 'Sweatshirt' : 'Shirts', 'Joggers' : 'Pants & Shorts', 'Jogger' : 'Pants & Shorts','Hoodie' : 'Jackets, Sweaters, & Outerwear', 'Jacket' : 'Jackets, Sweaters, & Outerwear', 'Shirt': 'Shirts', 
 'Pullover' : 'Jackets, Sweaters, & Outerwear', 'Kimono' : 'Jackets, Sweaters, & Outerwear', 'Sweatpants' : 'Pants & Shorts', 'Jersey' : 'Shirts', 'Jean' : 'Pants & Shorts', 'Pant' : 'Pants & Shorts', 
 'Anorak' : 'Jackets, Sweaters, & Outerwear', 'Pancho' : 'Jackets, Sweaters, & Outerwear', 'Bomber' : 'Jackets, Sweaters, & Outerwear', 'Windbreaker' : 'Jackets, Sweaters, & Outerwear', 'Shorts' : 'Pants & Shorts'}
 
