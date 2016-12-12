@@ -243,7 +243,6 @@ for link in accessoryLinks:
       if nullLink is not None:
         print "no next page"
         break
-      hyperLink = ""
       hyperlink = nextLink.find('a')["href"]
     pageUrl = link + hyperlink
     driver.get(pageUrl)
@@ -278,7 +277,6 @@ while len(soup.select("a.product-image-wrap")) != 0:
     if nullLink is not None:
       print "no next page"
       break
-    hyperLink = ""
     hyperlink = nextLink.find('a')["href"]
   pageUrl = shoesLink + hyperlink
   driver.get(pageUrl)

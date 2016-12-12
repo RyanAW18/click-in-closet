@@ -410,6 +410,21 @@ a:hover {
 	margin-top: 3%;
 }
 
+#outfit_add_btn {
+	margin-top: 10%;
+	border-radius:3px; 
+	width:auto; 
+	background-color: #724800 ; 
+	color:white;
+	transition: all .2s ease-in-out;
+	padding-right: 2%;
+}
+
+#outfit_add_btn:hover {
+	background-color: white; 
+	color:#724800 ;
+}
+
 
 @font-face {
   font-family: "Proxima Nova";
