@@ -245,7 +245,7 @@ function addOutfit(req, name, callback, res) {
 		        	console.log(err);
 		      } else if (result.length) {
 		        	console.log("Found account" + email)
-		        	callback(result[0], newOutfitJSON, userDB, name, email, res)
+		        	addEmptyOutfit(result[0], newOutfitJSON, userDB, name, email, res)
 
 		      } else {
 		        	console.log('No document(s) found with defined "find" criteria!');
@@ -287,6 +287,7 @@ function addEmptyOutfit(userJSON, newOutfitJSON, userDB, name, email) {
 function addItemToOutfit_User(req, productID, index, callback_prod, callback_up) {
 	console.log("Add item --> user level")
 	console.log("index: " + index)
+	console.log("ProductID in User: " + productID)
 	var cookie = req.cookies;
 	if (cookie["user_email"] == undefined) return null
 	if (cookie["user_email"].length == 0) return null
@@ -331,6 +332,7 @@ function addItemToOutfit_Product(userJSON, productID, index, callback, email, db
 	console.log("Add item --> product level")
 	console.log("Product ID: " + productID)
 	var outfitArray = userJSON["outfits"]
+	console.log(outfitArray)
 	var outfitJSON = outfitArray[index];
 	var items = outfitJSON["items"]
 	console.log(outfitJSON)
@@ -515,6 +517,94 @@ function removeItemFromOutfit(userJSON, outfitIndex, itemIndex, userDB, email) {
 
 }
 
+/*--------------------------------------------------------------------------------------------------------*/
+									//ADD REC OUTFIT FUNCTIONS
+/*--------------------------------------------------------------------------------------------------------*/
+function addRecOutfit(req, name, productID, itemID_1, itemID_2, itemID_3) {
+	var cookie = req.cookies;
+	if (cookie["user_email"] == undefined) return null
+	if (cookie["user_email"].length == 0) return null
+	else {
+		var email = cookie["user_email"]
+		var newOutfitJSON = {"name": name, "price": "$0.00", "items": []}
+
+		MongoClient.connect(url, function (err, db) {
+		  if (err) {
+		    console.log('Unable to connect to the mongoDB server. Error:', err);
+		  } else {
+		    //HURRAY!! We are connected. :)
+		    console.log('Database connection established');
+			}
+
+
+			 // do some work here with the database.
+		    var userDB = db.collection('userDB')
+		    userDB.find({'email' : email}).toArray(function(err, result) {
+		    	if (err) {
+		        	console.log(err);
+		      } else if (result.length) {
+		        	console.log("Found account" + email)
+		        	findRecOutfitItems(result[0], newOutfitJSON, userDB, name, email, productID, itemID_1, itemID_2, itemID_3, db)
+
+		      } else {
+		        	console.log('No document(s) found with defined "find" criteria!');
+		        	return 0
+		      }
+		    })
+
+		    //Close connection
+		    // db.close();
+		  });
+	}
+}
+
+function findRecOutfitItems(userJSON, newOutfitJSON, userDB, name, email, productID, itemID_1, itemID_2, itemID_3, db) {
+	var products = db.collection('productsMen')
+	var objectIDs = [new ObjectID(productID), new ObjectID(itemID_1), new ObjectID(itemID_2), new ObjectID(itemID_3)]
+	products.find({'_id':{$in: objectIDs}}).toArray(function(err, result) {
+		if (err) {
+	    	console.log(err);
+	  	} else if (result.length) {
+	    	console.log('Found ' + result.length + " item(s)")
+	    	addRecOutfitItems(result, userJSON, newOutfitJSON, userDB, name, email, productID, itemID_1, itemID_2, itemID_3)
+	  	} else {
+	    	console.log('No document(s) found with defined "find" criteria!');
+	    	return 0
+	  	}
+	})
+}
+
+function addRecOutfitItems(productArray, userJSON, newOutfitJSON, userDB, name, email, productID, itemID_1, itemID_2, itemID_3) {
+	var outfitArray = userJSON["outfits"]
+	var contains = false;
+	for (var i = 0; i < outfitArray.length; i++) {
+		if (outfitArray[i]["name"] == name) {
+			contains = true
+			break
+		}
+	}
+
+	if (!contains) {
+		newOutfitJSON["items"] = productArray
+		var price = updateOutfitPrice(productArray);
+		newOutfitJSON["price"] = price
+		console.log(newOutfitJSON)
+		outfitArray.push(newOutfitJSON)
+		console.log("outfit length: " + outfitArray.length)
+	    userDB.update(
+	    	{'email' : email},
+	    	{
+    		"$set": {
+	            "outfits": outfitArray
+    				}
+    		}
+   		)
+	}
+}
+/*--------------------------------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------------------------------*/
+
 
 /* GET home page. */
 router.get('/home', function(req, res, next) {
@@ -587,6 +677,7 @@ router.get('/outfits/add_item/:productID', function(req, res, next) {
 	else res.redirect("/");
 });
 
+
 router.get('/outfits/:index/:name', function(req, res, next) {
 	var loggedIn = checkLoginStatus(req);
 	if (loggedIn) {
@@ -609,6 +700,25 @@ router.get('/outfits/add_item/:productID/:index/:name', function(req, res, next)
 		// }
 		var url = "/outfits/" + index + "/" + name
 		res.redirect(url)
+	}
+	else res.redirect("/");
+});
+
+router.get('/outfits/add_outfit/:productID/:recIndex/:itemID_1/:itemID_2/:itemID_3', function(req, res, next) {
+	var loggedIn = checkLoginStatus(req);
+	var recIndex = req.params.recIndex
+	var productID = req.params.productID
+	var itemID_1 = req.params.itemID_1
+	var itemID_2 = req.params.itemID_2
+	var itemID_3 = req.params.itemID_3
+	console.log(productID)
+	if (loggedIn) {
+		var num = parseInt(recIndex) + 1;
+		var name = "Recommended Outfit #" + num + " for Item No. " + productID  
+		addRecOutfit(req, name, productID, itemID_1, itemID_2, itemID_3)
+		var url = "/outfits"
+		res.redirect(url)
+
 	}
 	else res.redirect("/");
 });

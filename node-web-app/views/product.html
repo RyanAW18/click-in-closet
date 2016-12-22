@@ -39,13 +39,13 @@
 	  	<div class="row">
 		  	<div class="col-md-1 col-lg-1"></div>
 		  	<div class="col-sm-12 col-md-5 col-lg-5">
-		  		<center><img id="product_pic" class="product_pic" src="http://www.forever21.com/images/1_front_750/00214348-01.jpg" width="400px" style="margin-top:10%"></center>
+		  		<center><img id="product_pic" class="product_pic" src="" width="400px" style="margin-top:10%"></center>
 
 		  		<center><a class="product_link"><p id="site_link" style="margin-top:5%">View it on the BRAND website</p></a></center>
 			</div>
 			<div class="col-sm-12 col-md-5 col-lg-5">
 		  		<h1 id="product_title"></h1>
-		  		<a class="product_link"><img id="brand_pic" class="brand_pic" width="50%"/></a>
+		  		<a class="product_link"><img id="brand_pic" class="brand_pic" width="30%"/></a>
 		  		<h2 id="product_price"></h2>
 		  		<h3 id="product-category">Category: CAT</h3>
 		  		<h3>Details</h3>
@@ -95,7 +95,7 @@
 					<p class="item-rec-name item3">Name</p>
 				</div>
 				<div class="col-sm-2 col-md-2 col-lg-2 item-rec">
-					<center><button type="submit" class="btn btn-default" id="outfit_add_btn">Add This To Your Outfits</button></center>
+					<center><button type="submit" class="btn btn-default outfit_add_btn">Add To Your Outfits</button></center>
 				</div>
 			</div>
 
@@ -120,7 +120,7 @@
 					<p class="item-rec-name item3">Name</p>
 				</div>
 				<div class="col-sm-2 col-md-2 col-lg-2 item-rec">
-					<center><button type="submit" class="btn btn-default" id="outfit_add_btn">Add This To Your Outfits</button></center>
+					<center><button type="submit" class="btn btn-default outfit_add_btn">Add To Your Outfits</button></center>
 				</div>
 			</div>
 
@@ -145,7 +145,7 @@
 					<p class="item-rec-name item3">Name</p>
 				</div>
 				<div class="col-sm-2 col-md-2 col-lg-2 item-rec">
-					<center><button type="submit" class="btn btn-default" id="outfit_add_btn">Add This To Your Outfits</button></center>
+					<center><button type="submit" class="btn btn-default outfit_add_btn">Add To Your Outfits</button></center>
 				</div>
 			</div>
 		</div>
@@ -260,11 +260,32 @@
 
 			}
 
-
-			
-
-			
-
-
+			var addButtons = document.getElementsByClassName("outfit_add_btn")
+			console.log(addButtons)
+			for (i = 0; i < addButtons.length; i++) {
+				addButtons[i].setAttribute("outfitIndex", i);
+				addButtons[i].onclick = (function() {
+					var productID = getQueryVariable(1)
+					var email = getCookie("user_email");
+					var userJSON = getUserData(email)
+					var newOutfitIndex = userJSON["outfits"].length + 1
+					var j = this.getAttribute("outfitIndex")
+					var categories = ["Shirts", "Pants & Shorts", "Jackets, Sweaters, & Outerwear", "Shoes & Other Footwear"]
+					var categMap = {"Shirts" : "rec shirts", "Pants & Shorts" : "rec pants", "Jackets, Sweaters, & Outerwear" : "rec outer", "Shoes & Other Footwear" : "rec shoes"}
+					var catIndex = categories.indexOf(prodCategory)
+					categories.splice(catIndex, 1)
+					var recs = []
+					productJSON = getProductData(productID)
+					for (var k = 0; k < categories.length; k++) {
+						recs.push(productJSON[categMap[categories[k]]][j])
+					}
+					console.log(recs)
+	 		    	var productID = getQueryVariable(1)
+	 		    	var category = productJSON["category"]
+	 		    	var url = "/outfits/add_outfit/" + productID + "/" + j + "/" + recs[0] + "/" + recs[1] + "/" + recs[2]
+	 		    	console.log(url)
+	 		    	window.location.href = url
+				});
+			}
 		</script>
 	</body>
